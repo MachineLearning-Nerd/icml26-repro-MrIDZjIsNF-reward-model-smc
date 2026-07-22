@@ -1,0 +1,45 @@
+{
+  "c1_bounded_tv": {
+    "passed": true,
+    "hit_rate": 0.595,
+    "tv": 0.405
+  },
+  "c2_exponential_no_reward": {
+    "passed": true,
+    "samples": [
+      16,
+      64,
+      256
+    ]
+  },
+  "c3_reward_helps": {
+    "passed": true,
+    "samples_reward": [
+      2,
+      2,
+      3
+    ],
+    "samples_no": [
+      16,
+      64,
+      256
+    ]
+  },
+  "c4_tv_bound": {
+    "passed": true,
+    "tv_small_eps": 0.030000000000000027,
+    "tv_large_eps": 0.38
+  },
+  "c5_particle_complexity": {
+    "passed": true,
+    "tvs": [
+      0.27999999999999997,
+      0.22800000000000004,
+      0.21919999999999998
+    ]
+  },
+  "c6_mh_approach": {
+    "passed": true,
+    "tv_final": 0.09099999999999997
+  }
+}
