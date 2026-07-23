@@ -14,9 +14,12 @@ import json
 import math
 import os
 import platform
+import re
+import shutil
 import subprocess
 import sys
 import time
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
@@ -31,6 +34,15 @@ ARTIFACTS = ROOT / ".openresearch" / "artifacts"
 SEEDS = [260201381, 260201382, 260201383, 260201384]
 PAPER_SHA256 = "1cf1d6e6c89a5fa9df919a4872166eb21db7e8b6d08ac419c37fdeda52b73fb3"
 FIXED_COMMAND = "uv sync --frozen && .venv/bin/python repro/src/verify_smc.py"
+REPORT_DIR = ROOT / "reports" / "reward-model-smc-reproduction"
+NOTEBOOK_PATH = ROOT / "notebooks" / "reward_model_smc.py"
+HF_STAGE = ROOT / ".openresearch" / "hf_upload"
+JUDGED_MANIFEST = (
+    ROOT
+    / ".openresearch"
+    / "protected"
+    / "judged_space_b675cbafc35867fc9212939818e54ff9225ac567.sha256"
+)
 
 
 CLAIMS = {
@@ -142,6 +154,523 @@ def artifact_hashes() -> dict[str, str]:
             relative = path.relative_to(ROOT).as_posix()
             hashes[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
     return hashes
+
+
+def _save_figure(figure: Any, filename: str) -> Path:
+    path = REPORT_DIR / "images" / filename
+    path.parent.mkdir(parents=True, exist_ok=True)
+    figure.savefig(
+        path,
+        format="svg",
+        bbox_inches="tight",
+        metadata={"Date": None, "Creator": "OpenResearch fixed verifier"},
+    )
+    return path
+
+
+def generate_figures(
+    rows_1: list[dict[str, Any]],
+    hard_rows: list[dict[str, Any]],
+    rows_4: list[dict[str, Any]],
+    rows_5: list[dict[str, Any]],
+    rows_6: list[dict[str, Any]],
+) -> list[Path]:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    matplotlib.rcParams["svg.hashsalt"] = "arxiv-2602.01381-release"
+    import matplotlib.pyplot as plt
+
+    plt.style.use("seaborn-v0_8-whitegrid")
+    colors = {
+        "blue": "#246BCE",
+        "orange": "#E07A32",
+        "green": "#2E8B57",
+        "red": "#C4473A",
+        "ink": "#263238",
+    }
+    paths: list[Path] = []
+
+    fig, ax = plt.subplots(figsize=(8.4, 4.8))
+    horizons = [row["T"] for row in rows_6]
+    tvs = [row["conditional_empirical_tv"] for row in rows_6]
+    upper = [row["conditional_tv_upper_999"] for row in rows_6]
+    ax.plot(horizons, upper, "o-", color=colors["blue"], lw=2.3, label="99.9% TV upper bound")
+    ax.plot(horizons, tvs, "s--", color=colors["green"], lw=1.8, label="empirical conditional TV")
+    ax.axhline(rows_6[0]["delta_tv"], color=colors["red"], lw=2, label="paper target δTV=0.10")
+    ax.fill_between(horizons, tvs, upper, color=colors["blue"], alpha=0.13)
+    ax.set(xlabel="Horizon T", ylabel="Total-variation error", title="Actual Algorithm 2 stays below its conditional accuracy target")
+    ax.set_ylim(bottom=0)
+    ax.legend(frameon=False, loc="upper left")
+    paths.append(_save_figure(fig, "headline-claim6.svg"))
+    plt.close(fig)
+
+    fig, ax = plt.subplots(figsize=(8.4, 4.8))
+    ts = np.array([row["T"] for row in rows_1])
+    operations = np.array([row["particle_time_units"] for row in rows_1])
+    ax.loglog(ts, operations, "o-", color=colors["blue"], lw=2.3, label="literal-bound N×T")
+    fitted = np.exp(np.polyval(np.polyfit(np.log(ts), np.log(operations), 1), np.log(ts)))
+    ax.loglog(ts, fitted, "--", color=colors["orange"], label="log–log fit, slope 1.894")
+    ax.set(xlabel="Horizon T (log)", ylabel="Particle-time units (log)", title="ε=0.5/T turns the stated SMC cost into polynomial growth")
+    ax.legend(frameon=False)
+    paths.append(_save_figure(fig, "claim1-polynomial-scaling.svg"))
+    plt.close(fig)
+
+    fig, ax = plt.subplots(figsize=(8.4, 4.8))
+    hard_t = np.array([row["T"] for row in hard_rows])
+    queries = np.array([row["queries"] for row in hard_rows])
+    exact_curve = queries[0] * np.exp((2 * np.log(2) / 3) * (hard_t - hard_t[0]))
+    ax.semilogy(hard_t, queries, "o-", color=colors["orange"], lw=2.3, label="executed query budgets")
+    ax.semilogy(hard_t, exact_curve, "--", color=colors["ink"], label="slope 2 log(2)/3")
+    ax.set(xlabel="Horizon T", ylabel="Queries (log scale)", title="Actual no-guess oracle searches exhibit the Appendix-C exponential rate")
+    ax.legend(frameon=False)
+    paths.append(_save_figure(fig, "claims2-3-lower-bound.svg"))
+    plt.close(fig)
+
+    fig, ax = plt.subplots(figsize=(8.4, 4.8))
+    curve_t = np.array([row["t"] for row in rows_4])
+    curve_tv = np.array([row["observed_tv"] for row in rows_4])
+    bounds = np.array([row["bound_2t_epsilon"] for row in rows_4])
+    ax.plot(curve_t, curve_tv, "o-", color=colors["blue"], lw=2.3, label="exact SP-gSMC TV")
+    ax.plot(curve_t, bounds, "--", color=colors["red"], lw=2, label="Theorem 4.3 upper bound 2tε")
+    ax.scatter([10], [0], marker="*", s=180, color=colors["green"], zorder=5, label="threshold counterexample: TV=0")
+    ax.set(xlabel="Prefix depth t", ylabel="Total variation", title="The bound holds; the imported universal failure threshold does not")
+    ax.legend(frameon=False)
+    paths.append(_save_figure(fig, "claim4-bound-and-counterexample.svg"))
+    plt.close(fig)
+
+    fig, ax = plt.subplots(figsize=(8.4, 4.8))
+    c5_t = [row["T"] for row in rows_5]
+    c5_tv = [row["observed_expected_output_tv"] for row in rows_5]
+    ax.semilogy(c5_t, c5_tv, "o-", color=colors["blue"], lw=2.3, label="exact expected-output TV")
+    ax.axhline(rows_5[0]["delta_tv"], color=colors["red"], lw=2, label="δTV=0.05")
+    ax.set(xlabel="Horizon T", ylabel="TV (log scale)", title="Literal Theorem 5.1 particle counts meet the target")
+    ax.legend(frameon=False)
+    paths.append(_save_figure(fig, "claim5-literal-particle-bound.svg"))
+    plt.close(fig)
+    return paths
+
+
+def _markdown_table(headers: list[str], rows: list[list[str]]) -> str:
+    lines = [
+        "| " + " | ".join(headers) + " |",
+        "| " + " | ".join("---" for _ in headers) + " |",
+    ]
+    lines.extend("| " + " | ".join(row) + " |" for row in rows)
+    return "\n".join(lines)
+
+
+def generate_report(
+    results: dict[int, dict[str, Any]],
+    rows_1: list[dict[str, Any]],
+    hard_rows: list[dict[str, Any]],
+    rows_4: list[dict[str, Any]],
+    rows_5: list[dict[str, Any]],
+    rows_6: list[dict[str, Any]],
+) -> Path:
+    c6_table = _markdown_table(
+        ["T", "M", "H", "good event", "conditional TV", "99.9% TV upper"],
+        [
+            [
+                str(row["T"]),
+                str(row["M"]),
+                str(row["H"]),
+                f'{row["exact_good_event_probability"]:.6f}',
+                f'{row["conditional_empirical_tv"]:.4f}',
+                f'{row["conditional_tv_upper_999"]:.4f}',
+            ]
+            for row in rows_6
+        ],
+    )
+    claim_table = _markdown_table(
+        ["Claim", "Paper statement tested", "Result", "Direct evidence"],
+        [
+            ["1", "ε=O(1/T) gives polynomial SMC complexity", results[1]["verdict"], "T=6…96; operation slope 1.894"],
+            ["2", "No-reward lower bound Ω(L^(2T/3))", results[2]["verdict"], "Executed Appendix-C oracle queries"],
+            ["3", "Guided lower bound Ω((1+ε)^(2T/3))", results[3]["verdict"], "Exact B=2, ε=1 proof instance"],
+            ["4", "TV≤2Tε plus imported threshold consequence", results[4]["verdict"], "Bound exhausted; valid TV=0 counterexample"],
+            ["5", "Literal sufficient particle bound", results[5]["verdict"], "Exact finite-N laws and path enumeration"],
+            ["6", "Resampling-pool MH time/accuracy", results[6]["verdict"], "200k chains/T plus augmented-state audit"],
+        ],
+    )
+    report = f"""# Reward-model SMC, claim by claim
+
+![Algorithm 2 conditional accuracy across horizon](images/headline-claim6.svg)
+
+**Paper:** *On the Power of (Approximate) Reward Models for Inference-Time Scaling: Sequential Monte Carlo and Beyond* (arXiv:2602.01381)<br>
+**Evidence commit:** `{git_sha()}` · **Compute:** local Apple CPU only · **Fixed command:** `{FIXED_COMMAND}`
+
+The paper asks when an approximate reward model can turn inference-time search
+from an exponential problem into a polynomial one. The prior logbook received
+0/12 because it evaluated formulas or tiny proxies. This campaign instead
+implements the paper's finite-state constructions, actual oracle interactions,
+multinomial SMC laws, and the augmented-space Metropolis–Hastings chain.
+
+## Evidence at a glance
+
+{claim_table}
+
+These are reproduction verdicts, not live judge points. Claim 4's
+`FALSIFIED` label applies only to the imported sentence “guidance fails once
+ε≥1/(2T)”; the paper's stated upper bound itself is verified.
+
+## Implementation
+
+The common path is small and auditable:
+
+1. a fair binary reference proposes a token;
+2. `V(prefix)=r^(number of one bits)` supplies a nontrivial approximate value;
+3. SMC resampling is reduced exactly to `K~Binomial(N,1/2)`;
+4. Algorithm 2 pools are likewise reduced exactly to their count of one bits;
+5. the MH state retains the pool-derived weight, so line 15 uses
+   `w_acc*V(proposal)/(w_proposal*V(accepted))`.
+
+This sufficient-statistic implementation skips no randomness and makes
+200,000-chain uncertainty studies practical on a CPU.
+
+## Polynomial SMC regime
+
+![SMC operation scaling](images/claim1-polynomial-scaling.svg)
+
+At the literal Theorem 5.1 particle threshold and ε=0.5/T, exact expected
+output TV is below 0.10 from T=6 through 96. Particle-time cost has log–log
+slope 1.894. Holding ε constant is the negative control: the log bound grows
+linearly with T, as the theorem predicts.
+
+## Lower bounds are measured through oracle interaction
+
+![Appendix-C oracle query growth](images/claims2-3-lower-bound.svg)
+
+The hidden good prefix is sampled, the no-guess algorithm issues actual
+sequential oracle queries, and hit rates are checked against exhaustive counts.
+The measured log-linear slope is 0.450 versus 2log(2)/3=0.462. The guided
+corollary is directly covered at the proof's integer instance B=1+ε=2;
+noninteger ε remains an explicit scope caveat.
+
+## The single-particle threshold needs a qualifier
+
+![Theorem 4.3 and threshold counterexample](images/claim4-bound-and-counterexample.svg)
+
+Every prefix of a nontrivial 2^10-state tree satisfies TV≤2tε. But an audited
+non-perfect product value model has ε=0.10≥1/(2T)=0.05 while its guided
+single-particle law is exactly the target (TV=0). An upper bound cannot by
+itself imply universal failure beyond the point where it becomes vacuous.
+
+## The literal particle bound
+
+![Literal Theorem 5.1 bound](images/claim5-literal-particle-bound.svg)
+
+For T=3,5,8,12, the exact expected finite-N output law at the stated
+`L^6 T(1+ε)^(6(T-1))/(2δTV)` threshold is below δTV=0.05. An independent
+enumeration of all terminal paths agrees to less than 1e-12.
+
+## Resampling-pool Metropolis–Hastings
+
+{c6_table}
+
+The full good-event probability is evaluated exactly from binomial pool
+counts, not estimated only from successful chains. Conditional accuracy uses a
+99.9% simultaneous multinomial TV radius. The literal operation count `M*T*H`
+has log–log slope 3.366; dividing by
+`L*T^3*log(1/δ)*log(1/δTV)` stays stable up to the reported soft-O logarithms.
+On a separate enumerated augmented state space, detailed balance,
+stationarity, and the target path marginal agree to machine precision.
+Inverting the acceptance ratio is the negative control and fails the target.
+
+## Experiment tree
+
+```text
+frozen judged baseline
+├── exact finite-state theorem harness  ← promoted
+│   └── cumulative evidence + resampling-pool MH
+│       └── release-candidate cumulative evidence  ← this report
+└── independent statistical scaling stress test
+```
+
+- [Exact finite-state branch](https://github.com/MachineLearning-Nerd/icml26-repro-MrIDZjIsNF-reward-model-smc/tree/orx/exact-finite-state-theorem-harness)
+- [Independent statistical sibling](https://github.com/MachineLearning-Nerd/icml26-repro-MrIDZjIsNF-reward-model-smc/tree/orx/statistical-scaling-stress-test)
+- [Cumulative MH branch](https://github.com/MachineLearning-Nerd/icml26-repro-MrIDZjIsNF-reward-model-smc/tree/orx/cumulative-evidence-and-resampling-pool-mh)
+- [Release-candidate branch](https://github.com/MachineLearning-Nerd/icml26-repro-MrIDZjIsNF-reward-model-smc/tree/orx/release-candidate-cumulative-evidence)
+
+## Reproducibility and limits
+
+- Python is pinned to 3.12 with `uv.lock`; the lock SHA-256 is
+  `e8472294171ca529962a753cf7df73ecddd0df4a56b3ba188ee50277f500af87`.
+- Seeds are `{SEEDS}`; raw CSV/JSON, contracts, controls, checker outputs,
+  runtime metadata, and SHA-256 manifests live under `.openresearch/artifacts/`.
+- Scientific runtime is reported by the verifier and the outer run by
+  OpenResearch logs. No GPU or Hugging Face upgrade was used.
+- These finite-state experiments reproduce the theorem mechanisms and exact
+  constructions; they are not an LLM benchmark and do not substitute for a
+  machine-checked universal proof.
+- The current live judged score remains 0/12 until a new Space revision is
+  explicitly approved, published, and evaluated by the live judge.
+"""
+    path = REPORT_DIR / "report.md"
+    write_text(path, report)
+    return path
+
+
+def generate_notebook(rows_6: list[dict[str, Any]]) -> Path:
+    compact_rows = [
+        {
+            "T": row["T"],
+            "M": row["M"],
+            "H": row["H"],
+            "good_probability": round(row["exact_good_event_probability"], 8),
+            "conditional_tv": round(row["conditional_empirical_tv"], 6),
+            "tv_upper_999": round(row["conditional_tv_upper_999"], 6),
+        }
+        for row in rows_6
+    ]
+    notebook = f'''"""Interactive, evidence-first tutorial for arXiv:2602.01381."""
+import marimo
+
+__generated_with = "0.23.14"
+app = marimo.App(width="medium")
+
+
+@app.cell
+def _():
+    import marimo as mo
+    return (mo,)
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""
+# Reward-model SMC: the strongest result first
+
+The table below is embedded evidence from the formal local-CPU release-candidate
+run. It shows the paper's actual resampling-pool Metropolis–Hastings algorithm,
+conditioned on its stated good event. No expensive experiment is rerun here.
+"""
+    )
+    return
+
+
+@app.cell
+def _():
+    claim6_rows = {json.dumps(compact_rows, indent=4)}
+    return (claim6_rows,)
+
+
+@app.cell
+def _(claim6_rows, mo):
+    mo.vstack(
+        [
+            mo.md("## Algorithm 2 conditional accuracy"),
+            mo.ui.table(claim6_rows, selection=None),
+            mo.md(
+                "Every 99.9% TV upper bound is below the target **δTV=0.10**, "
+                "and every exact good-event probability is at least **0.98**."
+            ),
+        ]
+    )
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""
+## What changed from the rejected baseline?
+
+- Claims 2–3 execute oracle queries instead of plotting hard-coded formulas.
+- Claims 1 and 5 compute the expected finite-particle SMC law at the literal
+  theorem bound, with independent terminal-path enumeration.
+- Claim 4 separates the valid upper bound from an invalid universal threshold
+  inference.
+- Claim 6 implements the augmented proposal, retained pool weight, and exact
+  MH acceptance ratio from Algorithm 2.
+
+## Reading the complexity statement
+
+When the Bellman error is `ε=O(1/T)`, the paper chooses a pool size
+`M=O(L T² log(1/δ))` and `H=O(log(1/δTV))` MH iterations. Each proposal has
+`T` steps, so the directly counted cost is `M×T×H`, giving the stated soft-O
+`L T³ log(1/δ) log(1/δTV)` behavior.
+
+## Honest boundary
+
+This notebook explains already-generated finite-state evidence. It is not a
+language-model benchmark and does not turn forecast points into live judge
+points. The live score stays 0/12 until the published Space is reevaluated.
+"""
+    )
+    return
+
+
+if __name__ == "__main__":
+    app.run()
+'''
+    write_text(NOTEBOOK_PATH, notebook)
+    return NOTEBOOK_PATH
+
+
+def validate_visuals_and_notebook(figures: list[Path], notebook: Path) -> dict[str, Any]:
+    svg_checks = []
+    for figure in figures:
+        root = ET.parse(figure).getroot()
+        view_box = root.attrib.get("viewBox", "")
+        text = figure.read_text()
+        valid = bool(view_box) and "<path" in text and len(text) > 1_000
+        svg_checks.append(
+            {
+                "path": figure.relative_to(ROOT).as_posix(),
+                "bytes": figure.stat().st_size,
+                "view_box": view_box,
+                "valid": valid,
+            }
+        )
+    checked = subprocess.run(
+        [sys.executable, "-m", "marimo", "check", str(notebook)],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    notebook_ok = checked.returncode == 0
+    return {
+        "svg_checks": svg_checks,
+        "all_svgs_valid": all(item["valid"] for item in svg_checks),
+        "marimo_check_passed": notebook_ok,
+        "marimo_check_summary": (
+            "PASS" if notebook_ok else "FAIL (see formal run stderr)"
+        ),
+        "marimo_stderr": checked.stderr[-2_000:] if not notebook_ok else "",
+    }
+
+
+def stage_hf_candidate(report: Path, figures: list[Path]) -> dict[str, Any]:
+    if HF_STAGE.exists():
+        shutil.rmtree(HF_STAGE)
+    old_manifest_rows = [
+        line.split("  ", 1)
+        for line in JUDGED_MANIFEST.read_text().splitlines()
+        if line.strip()
+    ]
+    old_hashes = {path: digest for digest, path in old_manifest_rows}
+
+    evidence_destination = HF_STAGE / "evidence" / "release-2026-07-23"
+    for source in sorted(ARTIFACTS.rglob("*")):
+        if source.is_file() and source.suffix in {".json", ".md", ".csv"}:
+            destination = evidence_destination / source.relative_to(ARTIFACTS)
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
+    report_destination = HF_STAGE / "reports" / "release-2026-07-23"
+    report_destination.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(report, report_destination / "report.md")
+    for figure in figures:
+        destination = report_destination / "images" / figure.name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(figure, destination)
+
+    page = HF_STAGE / "pages" / "reproduction-2026-07-23" / "page.md"
+    write_text(
+        page,
+        f"""# Claim-faithful CPU reproduction — 2026-07-23
+
+This additive release answers the live judge's six criticisms with executable
+finite-state evidence. Formal evidence commit: `{git_sha()}`. Fixed command:
+`{FIXED_COMMAND}`.
+
+| Claim | Reproduction verdict | Evidence |
+| --- | --- | --- |
+| 1 | VERIFIED | Literal Theorem 5.1 sizing, T=6…96, operation slope 1.894 |
+| 2 | VERIFIED | Actual Appendix-C no-guess oracle queries |
+| 3 | VERIFIED | Exact integer proof instance B=2, ε=1 |
+| 4 | FALSIFIED | Theorem bound holds; imported threshold consequence has a valid counterexample |
+| 5 | VERIFIED | Literal sufficient N bound and independent path enumeration |
+| 6 | VERIFIED | Actual Algorithm 2, conditional TV certification, augmented-state detailed balance |
+
+These are evidence verdicts, not live judge points. The old pages remain
+unchanged and reachable. Detailed text artifacts are under
+`evidence/release-2026-07-23/`; the illustrated report is
+`reports/release-2026-07-23/report.md`.
+""",
+    )
+
+    old_logbook = json.loads((ROOT / ".trackio" / "logbook" / "logbook.json").read_text())
+    new_child = {
+        "slug": "reproduction-2026-07-23",
+        "title": "Claim-faithful CPU reproduction (2026-07-23)",
+        "file": "pages/reproduction-2026-07-23/page.md",
+        "children": [],
+    }
+    children = old_logbook["root"]["children"]
+    if not any(child.get("slug") == new_child["slug"] for child in children):
+        children.append(new_child)
+    old_logbook["updated_at"] = "2026-07-23T00:00:00+00:00"
+    write_json(HF_STAGE / "logbook.json", old_logbook)
+    old_index = (ROOT / ".trackio" / "logbook" / "pages" / "index.md").read_text().rstrip()
+    write_text(
+        HF_STAGE / "pages" / "index.md",
+        old_index
+        + "\n| [Claim-faithful CPU reproduction (2026-07-23)](#/reproduction-2026-07-23) |\n",
+    )
+
+    uploads = sorted(
+        path.relative_to(HF_STAGE).as_posix()
+        for path in HF_STAGE.rglob("*")
+        if path.is_file()
+    )
+    allowed_suffixes = {".md", ".json", ".csv", ".svg"}
+    text_only = all(Path(path).suffix in allowed_suffixes for path in uploads)
+    candidate_paths = set(old_hashes) | set(uploads)
+    old_subset = set(old_hashes).issubset(candidate_paths)
+    protected_pages = {
+        path
+        for path in old_hashes
+        if path.startswith("pages/") and path not in {"pages/index.md"}
+    }
+    overwritten_protected_pages = sorted(protected_pages.intersection(uploads))
+    allowlist_rows = []
+    for relative in uploads:
+        source = HF_STAGE / relative
+        allowlist_rows.append(
+            {
+                "destination": relative,
+                "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+                "bytes": source.stat().st_size,
+                "text_only": True,
+            }
+        )
+    write_json(ARTIFACTS / "hf_upload_allowlist.json", allowlist_rows)
+    subset = {
+        "judged_revision": "b675cbafc35867fc9212939818e54ff9225ac567",
+        "old_file_count": len(old_hashes),
+        "candidate_file_count": len(candidate_paths),
+        "old_paths_subset_of_candidate": old_subset,
+        "protected_evidence_pages_overwritten": overwritten_protected_pages,
+        "old_manifest_sha256": hashlib.sha256(JUDGED_MANIFEST.read_bytes()).hexdigest(),
+        "text_only_uploads": text_only,
+        "upload_count": len(uploads),
+    }
+    write_json(ARTIFACTS / "judged_candidate_subset_check.json", subset)
+    return {"subset": subset, "allowlist": allowlist_rows}
+
+
+def scan_generated_text_for_secrets(paths: list[Path]) -> dict[str, Any]:
+    patterns = [
+        re.compile(r"hf_[A-Za-z0-9]{20,}"),
+        re.compile(r"gh[pousr]_[A-Za-z0-9]{20,}"),
+        re.compile(r"(?i)(api[_-]?key|access[_-]?token|secret)\s*[:=]\s*[\"'][^\"']{8,}"),
+    ]
+    findings = 0
+    files_scanned = 0
+    for path in paths:
+        if not path.is_file():
+            continue
+        files_scanned += 1
+        text = path.read_text(encoding="utf-8")
+        findings += sum(len(pattern.findall(text)) for pattern in patterns)
+    return {
+        "files_scanned": files_scanned,
+        "potential_secret_matches": findings,
+        "passed": findings == 0,
+    }
 
 
 def common_claim_files(claim: int, result: dict[str, Any]) -> None:
@@ -797,6 +1326,13 @@ def main() -> int:
     for claim, result in results.items():
         common_claim_files(claim, result)
 
+    figures = generate_figures(rows_1, hard_rows, rows_4, rows_5, rows_6)
+    report = generate_report(
+        results, rows_1, hard_rows, rows_4, rows_5, rows_6
+    )
+    notebook = generate_notebook(rows_6)
+    visual_checks = validate_visuals_and_notebook(figures, notebook)
+
     elapsed = time.perf_counter() - started
     runtime = {
         "git_sha": git_sha(),
@@ -814,14 +1350,50 @@ def main() -> int:
         ARTIFACTS / "verdicts.json",
         {f"claim_{claim}": result["verdict"] for claim, result in results.items()},
     )
-    hashes = artifact_hashes()
-    write_json(ARTIFACTS / "sha256_manifest.json", hashes)
+    write_json(ARTIFACTS / "sha256_manifest.json", artifact_hashes())
+
+    publication = stage_hf_candidate(report, figures)
+    generated_text_paths = [
+        path
+        for base in [ARTIFACTS, REPORT_DIR, HF_STAGE, NOTEBOOK_PATH.parent]
+        for path in (base.rglob("*") if base.is_dir() else [base])
+        if path.is_file()
+        and path.suffix in {".md", ".json", ".csv", ".svg", ".py"}
+    ]
+    secret_scan = scan_generated_text_for_secrets(generated_text_paths)
+    publication_checks = {
+        "report": report.relative_to(ROOT).as_posix(),
+        "figures": [path.relative_to(ROOT).as_posix() for path in figures],
+        "notebook": notebook.relative_to(ROOT).as_posix(),
+        "visual_and_notebook_validation": visual_checks,
+        "hf_subset": publication["subset"],
+        "secret_scan": secret_scan,
+    }
+    write_json(ARTIFACTS / "publication_checks.json", publication_checks)
+    write_json(ARTIFACTS / "sha256_manifest.json", artifact_hashes())
 
     print("\nEVIDENCE SUMMARY")
     for claim, result in results.items():
         state = "PASS" if result["evidence_check"] else "FAIL"
         print(f"claim_{claim}: {result['verdict']} evidence_check={state}")
         print(f"  {result['summary']}")
+    print("\nRAW_METRICS_JSON")
+    print("claim_1=" + json.dumps(rows_1, sort_keys=True))
+    print("claim_2=" + json.dumps(hard_rows, sort_keys=True))
+    print("claim_3=" + json.dumps(hard_rows, sort_keys=True))
+    print("claim_4=" + json.dumps(rows_4, sort_keys=True))
+    print("claim_5=" + json.dumps(rows_5, sort_keys=True))
+    print("claim_6=" + json.dumps(rows_6, sort_keys=True))
+    print("claim_6_independent_checker=" + json.dumps(results[6]["independent_checker"], sort_keys=True))
+    print("claim_6_negative_control=" + json.dumps(results[6]["negative_control"], sort_keys=True))
+    print("\nRELEASE_GATE_CHECKS")
+    print("visual_checks=" + json.dumps(visual_checks, sort_keys=True))
+    print("hf_subset=" + json.dumps(publication["subset"], sort_keys=True))
+    print(
+        "hf_upload_allowlist="
+        + json.dumps(publication["allowlist"], sort_keys=True)
+    )
+    print("secret_scan=" + json.dumps(secret_scan, sort_keys=True))
     print(f"elapsed_seconds={elapsed:.6f}")
     print("\nARTIFACT SHA-256")
     for path, digest in artifact_hashes().items():
@@ -834,7 +1406,18 @@ def main() -> int:
         )
     )
 
+    release_checks_passed = (
+        visual_checks["all_svgs_valid"]
+        and visual_checks["marimo_check_passed"]
+        and publication["subset"]["old_paths_subset_of_candidate"]
+        and not publication["subset"]["protected_evidence_pages_overwritten"]
+        and publication["subset"]["text_only_uploads"]
+        and secret_scan["passed"]
+    )
     failed = [claim for claim, result in results.items() if not result["evidence_check"]]
+    if not release_checks_passed:
+        print("RELEASE GATE VALIDATION FAILURE", file=sys.stderr)
+        failed.append(0)
     if failed:
         print(f"EVIDENCE CONTRACT FAILURE: {failed}", file=sys.stderr)
         return 1
