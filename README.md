@@ -7,6 +7,9 @@ This repository reproduces all six theoretical claims selected from
 Sequential Monte Carlo and Beyond*](https://arxiv.org/abs/2602.01381).
 The previous live judge score is still **0/12**; the results below are
 reproduction verdicts and a forecast, not points awarded by the judge.
+The approved evidence release is published in the
+[existing Hugging Face Space at revision `16f28275`](https://huggingface.co/spaces/DineshAI/MrIDZjIsNF/tree/16f282752393f0d0b9a05950ff2a4ce57d7bbf8f)
+and is awaiting a new live judge evaluation.
 
 The strongest test implements the paper's actual resampling-pool
 Metropolis–Hastings Algorithm 2. The paper target is conditional
@@ -30,6 +33,7 @@ language-model inference; it tests the theorem mechanisms and exact
 constructions, not an LLM benchmark or a machine-checked universal proof.
 
 - [Illustrated claim-by-claim report](reports/reward-model-smc-reproduction/report.md)
+- [Verified publication result](reports/reward-model-smc-reproduction/release-result.md)
 - [Tutorial-style marimo notebook](notebooks/reward_model_smc.py)
 - [Machine-readable claim contracts and evidence](.openresearch/artifacts/)
 - [Reproduction command ledger](reports/reward-model-smc-reproduction/commands.md)
