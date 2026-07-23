@@ -1,0 +1,5 @@
+{
+  "max_absolute_tv_difference": 0.0,
+  "method": "enumerate every binary path instead of grouping by Hamming weight",
+  "passed": true
+}

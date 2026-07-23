@@ -1,0 +1,4 @@
+{
+  "method": "exhaustively count hidden prefixes captured by the no-guess query list",
+  "passed": true
+}

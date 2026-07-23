@@ -1,0 +1,31 @@
+{
+  "counterexample": {
+    "T": 10,
+    "assumption_3_2_satisfied": true,
+    "minimal_bellman_epsilon": 0.10000000000000009,
+    "nonperfect_reward_model": true,
+    "reward_ratio": 1.2,
+    "sp_tv": 0.0,
+    "threshold": 0.05
+  },
+  "evidence_check": true,
+  "independent_checker": {
+    "explicit_terminal_sum_tv": 0.024107538869675024,
+    "library_tv": 0.024107538869675024,
+    "passed": true
+  },
+  "limitations": [
+    "FALSIFIED applies to the imported 'guidance fails once' consequence, not to Theorem 4.3's valid upper bound.",
+    "TV is evaluated exactly over all 2^10 terminal paths."
+  ],
+  "negative_control": {
+    "audited_epsilon": 0.02000000000000024,
+    "declared_epsilon": 0.01,
+    "description": "Underdeclare epsilon=0.01 for a tree whose audited epsilon is 0.02.",
+    "rejected": true
+  },
+  "summary": "The exact 2t*epsilon upper bound held on a nontrivial binary tree. However, the imported threshold consequence is false: a non-perfect product reward model has epsilon=0.100 >= 1/(2T)=0.050, yet SP-gSMC is exact (TV=0.0e+00).",
+  "theorem_4_3_bound_verified": true,
+  "threshold_consequence_falsified": true,
+  "verdict": "FALSIFIED"
+}

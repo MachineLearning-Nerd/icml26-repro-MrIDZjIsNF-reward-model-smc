@@ -1,0 +1,57 @@
+{
+  "agent_view_tokens": 1451,
+  "emoji": "\ud83c\udfaf",
+  "paper": null,
+  "revision": "1784689500401465145",
+  "root": {
+    "children": [
+      {
+        "children": [],
+        "file": "pages/overview/page.md",
+        "slug": "overview",
+        "title": "Overview"
+      },
+      {
+        "children": [],
+        "file": "pages/claims/page.md",
+        "slug": "claims",
+        "title": "Claims"
+      },
+      {
+        "children": [],
+        "file": "pages/evidence/page.md",
+        "slug": "evidence",
+        "title": "Evidence"
+      },
+      {
+        "children": [],
+        "file": "pages/verification-run/page.md",
+        "slug": "verification-run",
+        "title": "Verification run"
+      },
+      {
+        "children": [],
+        "file": "pages/conclusion/page.md",
+        "slug": "conclusion",
+        "title": "Conclusion"
+      },
+      {
+        "children": [],
+        "file": "pages/reproduction-2026-07-23/page.md",
+        "slug": "reproduction-2026-07-23",
+        "title": "Claim-faithful CPU reproduction (2026-07-23)"
+      }
+    ],
+    "file": "pages/index.md",
+    "slug": "index",
+    "title": "Repro - On the Power of Approximate Reward Models for Inference-Time Scaling"
+  },
+  "schema_version": 1,
+  "space_id": null,
+  "tags": [
+    "icml2026-repro",
+    "paper-MrIDZjIsNF"
+  ],
+  "title": "Repro - On the Power of Approximate Reward Models for Inference-Time Scaling",
+  "updated_at": "2026-07-23T00:00:00+00:00"
+}

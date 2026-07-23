@@ -1,0 +1,64 @@
+{
+  "figures": [
+    "reports/reward-model-smc-reproduction/images/headline-claim6.svg",
+    "reports/reward-model-smc-reproduction/images/claim1-polynomial-scaling.svg",
+    "reports/reward-model-smc-reproduction/images/claims2-3-lower-bound.svg",
+    "reports/reward-model-smc-reproduction/images/claim4-bound-and-counterexample.svg",
+    "reports/reward-model-smc-reproduction/images/claim5-literal-particle-bound.svg"
+  ],
+  "hf_subset": {
+    "candidate_file_count": 82,
+    "judged_revision": "b675cbafc35867fc9212939818e54ff9225ac567",
+    "old_file_count": 17,
+    "old_manifest_sha256": "5693e6c47f55ed9ba9dc17053adc3fbe05e29580cd5151dee36523aa1846ee5d",
+    "old_paths_subset_of_candidate": true,
+    "protected_evidence_pages_overwritten": [],
+    "text_only_uploads": true,
+    "upload_count": 67
+  },
+  "notebook": "notebooks/reward_model_smc.py",
+  "report": "reports/reward-model-smc-reproduction/report.md",
+  "secret_scan": {
+    "files_scanned": 134,
+    "passed": true,
+    "potential_secret_matches": 0
+  },
+  "visual_and_notebook_validation": {
+    "all_svgs_valid": true,
+    "marimo_check_passed": true,
+    "marimo_check_summary": "PASS",
+    "marimo_stderr": "",
+    "svg_checks": [
+      {
+        "bytes": 43033,
+        "path": "reports/reward-model-smc-reproduction/images/headline-claim6.svg",
+        "valid": true,
+        "view_box": "0 0 519.465703 321.517859"
+      },
+      {
+        "bytes": 39183,
+        "path": "reports/reward-model-smc-reproduction/images/claim1-polynomial-scaling.svg",
+        "valid": true,
+        "view_box": "0 0 515.404961 323.437781"
+      },
+      {
+        "bytes": 35233,
+        "path": "reports/reward-model-smc-reproduction/images/claims2-3-lower-bound.svg",
+        "valid": true,
+        "view_box": "0 0 515.410625 321.517859"
+      },
+      {
+        "bytes": 45361,
+        "path": "reports/reward-model-smc-reproduction/images/claim4-bound-and-counterexample.svg",
+        "valid": true,
+        "view_box": "0 0 519.465703 321.517859"
+      },
+      {
+        "bytes": 33893,
+        "path": "reports/reward-model-smc-reproduction/images/claim5-literal-particle-bound.svg",
+        "valid": true,
+        "view_box": "0 0 519.504961 321.517859"
+      }
+    ]
+  }
+}

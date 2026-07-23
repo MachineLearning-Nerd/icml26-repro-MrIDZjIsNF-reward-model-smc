@@ -1,0 +1,23 @@
+{
+  "allowed_verdicts": [
+    "VERIFIED",
+    "FALSIFIED",
+    "BLOCKED"
+  ],
+  "anchors": [
+    "alg2",
+    "S6.Thmtheorem1"
+  ],
+  "claim": 6,
+  "fixed_command": "uv sync --frozen && .venv/bin/python repro/src/verify_smc.py",
+  "git_sha": "dcce92c8d65d0d21cad7f3c349c76a462ad1c878",
+  "paper_sha256": "1cf1d6e6c89a5fa9df919a4872166eb21db7e8b6d08ac419c37fdeda52b73fb3",
+  "quantifiers": "0<delta less than or comparable to delta_TV; conditional output law on the theorem's good event; exact augmented-space MH ratio.",
+  "seeds": [
+    260201381,
+    260201382,
+    260201383,
+    260201384
+  ],
+  "statement": "Algorithm 2 resampling-pool SP-gSMC+MH attains conditional delta_TV accuracy on a probability >=1-delta event in soft-O(L*T^3*log(1/delta)*log(1/delta_TV)) time."
+}

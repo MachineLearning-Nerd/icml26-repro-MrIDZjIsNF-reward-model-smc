@@ -1,0 +1,22 @@
+{
+  "evidence_check": true,
+  "expected_log_linear_slope": 0.46209812037329684,
+  "independent_checker": {
+    "assumption_3_1_and_3_2_audit": true,
+    "exact_query_fraction_check": true,
+    "passed": true
+  },
+  "limitations": [
+    "Appendix C writes B=1+epsilon although B is a branching integer; this route directly covers epsilon=1.",
+    "A separate route is still desirable for noninteger epsilon in (0,1)."
+  ],
+  "negative_control": {
+    "description": "Leak hidden u directly; one query succeeds but violates the paper's oracle/no-guess premise.",
+    "hit_rate": 1.0,
+    "rejected_as_counterexample": true,
+    "violates_oracle_model": true
+  },
+  "observed_log_linear_slope": 0.4497486215466278,
+  "summary": "The same executed hard family was audited under Assumption 3.2 with epsilon=1 and B=1+epsilon=2. Its query slope matches 2log(1+epsilon)/3 (0.450 observed, 0.462 exact).",
+  "verdict": "VERIFIED"
+}

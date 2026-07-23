@@ -1,0 +1,6 @@
+{
+  "description": "Leak hidden u directly; one query succeeds but violates the paper's oracle/no-guess premise.",
+  "hit_rate": 1.0,
+  "rejected_as_counterexample": true,
+  "violates_oracle_model": true
+}

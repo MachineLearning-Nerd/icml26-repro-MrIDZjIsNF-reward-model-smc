@@ -1,0 +1,23 @@
+{
+  "description": "Hold epsilon constant instead of c/T.",
+  "log_bounds": [
+    {
+      "T": 6,
+      "log_N_bound": 5.436763385571065
+    },
+    {
+      "T": 12,
+      "log_N_bound": 7.886356476230563
+    },
+    {
+      "T": 24,
+      "log_N_bound": 12.092395476989612
+    },
+    {
+      "T": 48,
+      "log_N_bound": 19.81132629794777
+    }
+  ],
+  "log_linear_slope": 0.33895079705392195,
+  "rejected_as_polynomial": true
+}

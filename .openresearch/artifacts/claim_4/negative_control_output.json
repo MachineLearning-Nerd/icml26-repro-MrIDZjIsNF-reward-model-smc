@@ -1,0 +1,6 @@
+{
+  "audited_epsilon": 0.02000000000000024,
+  "declared_epsilon": 0.01,
+  "description": "Underdeclare epsilon=0.01 for a tree whose audited epsilon is 0.02.",
+  "rejected": true
+}

@@ -1,0 +1,31 @@
+{
+  "paper_id": "2602.01381",
+  "title": "On the Power of (Approximate) Reward Models for Inference-Time Scaling: Sequential Monte Carlo and Beyond",
+  "source_url": "https://ar5iv.labs.arxiv.org/html/2602.01381",
+  "retrieved_utc": "2026-07-23T16:15:06Z",
+  "retrieval_user_agent": "OpenResearch-Reproduction/1.0 (+https://github.com/MachineLearning-Nerd/icml26-repro-MrIDZjIsNF-reward-model-smc)",
+  "sha256": "1cf1d6e6c89a5fa9df919a4872166eb21db7e8b6d08ac419c37fdeda52b73fb3",
+  "anchors": {
+    "assumption_3_1": "S3.Thmtheorem1",
+    "assumption_3_2": "S3.Thmtheorem2",
+    "theorem_4_1": "S4.Thmtheorem1",
+    "corollary_4_2": "S4.Thmtheorem2",
+    "theorem_4_3": "S4.Thmtheorem3",
+    "theorem_5_1": "S5.Thmtheorem1",
+    "corollary_5_2": "S5.Thmtheorem2",
+    "algorithm_2": "alg2",
+    "theorem_6_1": "S6.Thmtheorem1",
+    "appendix_c": "A3"
+  },
+  "verdict_dataset": {
+    "repo_id": "ICML-2026-agent-repro/verdicts",
+    "revision": "047e821a412e22da0c6fa8a4b9b78a3ca9096dbf",
+    "verdicts_json_sha256": "9660ae870609d0773cac76d70f439a1a3dc259ba98bc07174e5a3238a1289568",
+    "filter": "space_id == \"DineshAI/MrIDZjIsNF\""
+  },
+  "judged_space": {
+    "space_id": "DineshAI/MrIDZjIsNF",
+    "revision": "b675cbafc35867fc9212939818e54ff9225ac567",
+    "manifest": ".openresearch/protected/judged_space_b675cbafc35867fc9212939818e54ff9225ac567.sha256"
+  }
+}

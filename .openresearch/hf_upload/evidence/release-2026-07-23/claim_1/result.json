@@ -1,0 +1,38 @@
+{
+  "evidence_check": true,
+  "independent_checker": {
+    "grouped_tv": 3.88624520324701e-05,
+    "passed": true,
+    "path_enumerated_tv": 3.88624520324701e-05
+  },
+  "limitations": [
+    "Finite-state product models do not replace a proof over every FK model.",
+    "Operation counts, not noisy wall-clock fits, are the primary complexity evidence."
+  ],
+  "negative_control": {
+    "description": "Hold epsilon constant instead of c/T.",
+    "log_bounds": [
+      {
+        "T": 6,
+        "log_N_bound": 5.436763385571065
+      },
+      {
+        "T": 12,
+        "log_N_bound": 7.886356476230563
+      },
+      {
+        "T": 24,
+        "log_N_bound": 12.092395476989612
+      },
+      {
+        "T": 48,
+        "log_N_bound": 19.81132629794777
+      }
+    ],
+    "log_linear_slope": 0.33895079705392195,
+    "rejected_as_polynomial": true
+  },
+  "polynomial_cost_slope": 1.8940480399296913,
+  "summary": "Exact expected-output TV stayed below delta_TV=0.1 for T=6..96 at the stated bound; measured operation-count log-log slope was 1.894. Constant epsilon produced exponential log-bound slope 0.339 per horizon step.",
+  "verdict": "VERIFIED"
+}

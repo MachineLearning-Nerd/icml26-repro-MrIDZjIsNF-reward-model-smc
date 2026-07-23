@@ -1,0 +1,8 @@
+{
+  "augmented_states": 110,
+  "detailed_balance_max_error": 2.168404344971009e-19,
+  "finite_iteration_path_tv": 1.148942052608959e-13,
+  "invariant_path_tv": 1.304512053934559e-15,
+  "passed": true,
+  "stationarity_max_error": 2.0816681711721685e-17
+}

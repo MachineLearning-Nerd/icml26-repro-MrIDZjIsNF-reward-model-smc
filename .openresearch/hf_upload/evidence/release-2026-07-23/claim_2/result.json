@@ -1,0 +1,22 @@
+{
+  "evidence_check": true,
+  "expected_log_linear_slope": 0.46209812037329684,
+  "independent_checker": {
+    "method": "exhaustively count hidden prefixes captured by the no-guess query list",
+    "passed": true
+  },
+  "limitations": [
+    "The executable family uses T divisible by three and integer L=2, exactly as Appendix C.",
+    "The lower bound is certified through the paper's no-guess oracle model, not ordinary unrestricted programs."
+  ],
+  "negative_control": {
+    "description": "Use one query at T=15; this must not reach forced probability 1/6.",
+    "hit_rate": 0.00086,
+    "hits": 43,
+    "rejected": true,
+    "trials": 50000
+  },
+  "observed_log_linear_slope": 0.4497486215466278,
+  "summary": "The Appendix-C hidden-prefix oracle was executed across four horizons. Queries required for the TV-forced hit probability had log-linear slope 0.450, versus exact 2log(2)/3=0.462; empirical oracle hits matched exhaustive counts.",
+  "verdict": "VERIFIED"
+}

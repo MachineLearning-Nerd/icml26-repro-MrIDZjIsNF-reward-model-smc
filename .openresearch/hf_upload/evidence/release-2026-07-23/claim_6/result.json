@@ -1,0 +1,33 @@
+{
+  "conditional_accuracy_verified": true,
+  "conditional_good_event_verified": true,
+  "evidence_check": true,
+  "independent_checker": {
+    "augmented_states": 110,
+    "detailed_balance_max_error": 2.168404344971009e-19,
+    "finite_iteration_path_tv": 1.148942052608959e-13,
+    "invariant_path_tv": 1.304512053934559e-15,
+    "passed": true,
+    "stationarity_max_error": 2.0816681711721685e-17
+  },
+  "limitations": [
+    "The stochastic sweep reaches T=8 because pathwise simultaneous TV certification has 2^T categories; it is a finite-state theorem reproduction, not a language-model benchmark.",
+    "Soft-O hides constants and polylogarithms, so operation counts and their normalized scale are reported rather than fitting wall-clock time alone.",
+    "Experiments cannot replace the paper's universal proof; Appendix-F inequalities are source-audited and the implementation is independently exhausted on a small augmented space."
+  ],
+  "method_markdown": "# Claim 6 method\n\nThe verifier implements Algorithm 2 literally on the audited product potential\n`V(s_1:t)=r^(sum s_i)` and a fair binary reference.  It uses the exact\nbinomial sufficient statistic for each `M`-candidate pool, so no candidate-level\napproximation is introduced.  Across 200,000 independent chains per horizon it:\n\n1. records the Appendix-F good event for every proposal and every time step;\n2. conditions the output law on that event;\n3. attaches a 99.9% simultaneous multinomial TV radius;\n4. evaluates the exact binomial probability of the full good event;\n5. records literal `M*T*H` operations and the theorem's complexity scale; and\n6. exhaustively enumerates a separate tiny augmented state space to verify\n   detailed balance, stationarity, and the target path marginal.\n\nFormal run command: `uv sync --frozen && .venv/bin/python repro/src/verify_smc.py`.\n",
+  "negative_control": {
+    "augmented_states": 110,
+    "description": "Invert Algorithm 2 line-15 acceptance ratio.",
+    "detailed_balance_max_error": 2.168404344971009e-19,
+    "failed_target_as_intended": true,
+    "finite_iteration_path_tv": 0.16264747475296043,
+    "invariant_path_tv": 0.16264769078792274,
+    "stationarity_max_error": 1.734723475976807e-17
+  },
+  "normalized_complexity_spread": 1.6099770923668495,
+  "operation_loglog_slope": 3.366234015397734,
+  "source_audit_markdown": "# Claim 6 source audit\n\nSource: ar5iv HTML for arXiv:2602.01381, SHA-256 `1cf1d6e6c89a5fa9df919a4872166eb21db7e8b6d08ac419c37fdeda52b73fb3`.\n\nAnchors: `alg2`, `S6.Thmtheorem1`, and the proof in Appendix F.\n\nAlgorithm 2 draws `M` reference candidates at each step, selects one in\nproportion to its value, accumulates\n`w <- w * V(prefix) / Zbar`, and accepts a complete proposal with\n`min(1, w_acc*V(proposal)/(w_proposal*V(accepted)))`.  Theorem 6.1 is\nconditional on every empirical normalizer lying within relative error\n`xi=O(1/T)` and requires `epsilon=O(1/T)`, `H=O(log(1/delta_TV))`, and\n`M=O(L*T^2*log(1/delta))` up to the proof's union-bound logarithms.\n",
+  "summary": "The literal resampling-pool augmented proposal and line-15 MH ratio achieved conditional TV upper bounds below 0.1 for T=3..8 on exact good events of probability at least 1-0.02. Measured operation-count slope was 3.366; exhaustive augmented-state detailed balance independently validated the implementation.",
+  "verdict": "VERIFIED"
+}

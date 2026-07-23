@@ -1,0 +1,20 @@
+{
+  "evidence_check": true,
+  "independent_checker": {
+    "max_absolute_tv_difference": 0.0,
+    "method": "enumerate every binary path instead of grouping by Hamming weight",
+    "passed": true
+  },
+  "limitations": [
+    "The exact finite-N output calculation exploits a product model; it is a direct test, not a universal proof.",
+    "The theorem bound is sufficient and intentionally not interpreted as necessary or tight."
+  ],
+  "negative_control": {
+    "audited_L": 1.05,
+    "declared_L": 1.0,
+    "description": "Underdeclare L=1 for a model with audited ratio L=1.05.",
+    "rejected": true
+  },
+  "summary": "The literal Theorem 5.1 bound was computed and used at four horizons. The expected SMC output law, computed independently from Binomial resampling, stayed below delta_TV=0.05; full path enumeration agreed to <1e-12.",
+  "verdict": "VERIFIED"
+}

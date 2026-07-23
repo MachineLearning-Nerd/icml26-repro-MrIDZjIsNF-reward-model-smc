@@ -1,0 +1,10 @@
+{
+  "candidate_file_count": 82,
+  "judged_revision": "b675cbafc35867fc9212939818e54ff9225ac567",
+  "old_file_count": 17,
+  "old_manifest_sha256": "5693e6c47f55ed9ba9dc17053adc3fbe05e29580cd5151dee36523aa1846ee5d",
+  "old_paths_subset_of_candidate": true,
+  "protected_evidence_pages_overwritten": [],
+  "text_only_uploads": true,
+  "upload_count": 67
+}

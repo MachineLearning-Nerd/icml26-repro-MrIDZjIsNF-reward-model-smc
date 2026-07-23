@@ -1,0 +1,9 @@
+{
+  "augmented_states": 110,
+  "description": "Invert Algorithm 2 line-15 acceptance ratio.",
+  "detailed_balance_max_error": 2.168404344971009e-19,
+  "failed_target_as_intended": true,
+  "finite_iteration_path_tv": 0.16264747475296043,
+  "invariant_path_tv": 0.16264769078792274,
+  "stationarity_max_error": 1.734723475976807e-17
+}

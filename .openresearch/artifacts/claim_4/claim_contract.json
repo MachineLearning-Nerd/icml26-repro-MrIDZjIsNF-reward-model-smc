@@ -1,0 +1,24 @@
+{
+  "allowed_verdicts": [
+    "VERIFIED",
+    "FALSIFIED",
+    "BLOCKED"
+  ],
+  "anchors": [
+    "S3.Thmtheorem2",
+    "S4.Thmtheorem3",
+    "A3"
+  ],
+  "claim": 4,
+  "fixed_command": "uv sync --frozen && .venv/bin/python repro/src/verify_smc.py",
+  "git_sha": "dcce92c8d65d0d21cad7f3c349c76a462ad1c878",
+  "paper_sha256": "1cf1d6e6c89a5fa9df919a4872166eb21db7e8b6d08ac419c37fdeda52b73fb3",
+  "quantifiers": "Every t in [T] and every model satisfying Assumption 3.2. The threshold sentence is not a logical consequence of an upper bound.",
+  "seeds": [
+    260201381,
+    260201382,
+    260201383,
+    260201384
+  ],
+  "statement": "Theorem 4.3 gives TV(tilde_pi_t, hat_pi_t)<=2t epsilon. The imported claim additionally says guidance fails once epsilon>=1/(2T)."
+}

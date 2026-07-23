@@ -1,0 +1,16 @@
+{
+  "elapsed_seconds": 41.19326700002421,
+  "fixed_command": "uv sync --frozen && .venv/bin/python repro/src/verify_smc.py",
+  "git_sha": "dcce92c8d65d0d21cad7f3c349c76a462ad1c878",
+  "logical_cpu_count": 8,
+  "numpy": "2.5.1",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "processor": "arm",
+  "python": "3.12.11 (main, Aug 18 2025, 19:02:39) [Clang 20.1.4 ]",
+  "seeds": [
+    260201381,
+    260201382,
+    260201383,
+    260201384
+  ]
+}

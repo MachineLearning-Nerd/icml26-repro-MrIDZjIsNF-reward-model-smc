@@ -1,0 +1,404 @@
+[
+  {
+    "bytes": 281,
+    "destination": "evidence/release-2026-07-23/claim_1/EVAL.md",
+    "sha256": "32b1f4e4d2fc83b506445a796b898f22ba4672aa4aff130ad7b51f276df92846",
+    "text_only": true
+  },
+  {
+    "bytes": 821,
+    "destination": "evidence/release-2026-07-23/claim_1/claim_contract.json",
+    "sha256": "aced70a45811abc6221a322053e6dfb0c27e2b7ae56c729acd57af29797a48b6",
+    "text_only": true
+  },
+  {
+    "bytes": 105,
+    "destination": "evidence/release-2026-07-23/claim_1/independent_checker_output.json",
+    "sha256": "36a5799ee87046f310cc928940283fee75221fe79b2aaa50e818a4d515eed20e",
+    "text_only": true
+  },
+  {
+    "bytes": 188,
+    "destination": "evidence/release-2026-07-23/claim_1/limitations.md",
+    "sha256": "692f4039b591c9ef0af967018627655ab47a7d6fc2a8a7fcfdf48798833c3360",
+    "text_only": true
+  },
+  {
+    "bytes": 416,
+    "destination": "evidence/release-2026-07-23/claim_1/method.md",
+    "sha256": "1c98d2c50a03582b57df874db9229fbe40a59e64ad0dac5ba8f1fee3357fb6c3",
+    "text_only": true
+  },
+  {
+    "bytes": 428,
+    "destination": "evidence/release-2026-07-23/claim_1/negative_control_output.json",
+    "sha256": "88432bcf10d772cd14de5cb78060184662deb99adc8314755f1a5c66ff2fba80",
+    "text_only": true
+  },
+  {
+    "bytes": 771,
+    "destination": "evidence/release-2026-07-23/claim_1/raw.csv",
+    "sha256": "0fc6532b103426b167b1c7caf006fcccb882b48dcac2e237119274223924b562",
+    "text_only": true
+  },
+  {
+    "bytes": 1154,
+    "destination": "evidence/release-2026-07-23/claim_1/result.json",
+    "sha256": "da0a0175296a2d8012f3156ff875ebccb771448b5ffb5fd288f958d7599687d7",
+    "text_only": true
+  },
+  {
+    "bytes": 532,
+    "destination": "evidence/release-2026-07-23/claim_1/source_audit.md",
+    "sha256": "408297f8e3e0305e0c5863e5beb266a340123ce7dcee7bd9e2cba2adeff5cc9a",
+    "text_only": true
+  },
+  {
+    "bytes": 298,
+    "destination": "evidence/release-2026-07-23/claim_2/EVAL.md",
+    "sha256": "f43e6c7bb0bbec4035f40f22cb21b79bed7a85996e3caf160963ac102f59fbf3",
+    "text_only": true
+  },
+  {
+    "bytes": 756,
+    "destination": "evidence/release-2026-07-23/claim_2/claim_contract.json",
+    "sha256": "48377f60b8a718035758fc12d8b8f0bd96b7e6b569b2c89dc6492d05bbe330bc",
+    "text_only": true
+  },
+  {
+    "bytes": 107,
+    "destination": "evidence/release-2026-07-23/claim_2/independent_checker_output.json",
+    "sha256": "295cd737a8f2d9ef75d0bf98df2869b79ee7d460aeb60ff8ce59bb4141621918",
+    "text_only": true
+  },
+  {
+    "bytes": 230,
+    "destination": "evidence/release-2026-07-23/claim_2/limitations.md",
+    "sha256": "56a758ce667fe9eca3a3baaacacf17bb68238723f19e1ebe3e601baefcd3959b",
+    "text_only": true
+  },
+  {
+    "bytes": 416,
+    "destination": "evidence/release-2026-07-23/claim_2/method.md",
+    "sha256": "cc6f0b96b9238b577cc0900f998065ed9652cf0009b73e975a0cd2992ab39a98",
+    "text_only": true
+  },
+  {
+    "bytes": 166,
+    "destination": "evidence/release-2026-07-23/claim_2/negative_control_output.json",
+    "sha256": "c2b867c8b5f1acf32218d8733041f0a64688bec10fa3ab8f95a71b8346ca0441",
+    "text_only": true
+  },
+  {
+    "bytes": 689,
+    "destination": "evidence/release-2026-07-23/claim_2/raw.csv",
+    "sha256": "15c8662d80f207a70e2d817adcc3a0a3e0be521a211d2850067fdaf5be274fe8",
+    "text_only": true
+  },
+  {
+    "bytes": 975,
+    "destination": "evidence/release-2026-07-23/claim_2/result.json",
+    "sha256": "4b27548627bb64b7dcdac7323dc0e1ed30e12601c1fad83073c82f6d311b1c2d",
+    "text_only": true
+  },
+  {
+    "bytes": 489,
+    "destination": "evidence/release-2026-07-23/claim_2/source_audit.md",
+    "sha256": "2b713184682b352d496c6522da524ce40152e9dfdffc1396609826fa88ad2be0",
+    "text_only": true
+  },
+  {
+    "bytes": 239,
+    "destination": "evidence/release-2026-07-23/claim_3/EVAL.md",
+    "sha256": "c5fe0542059e39cc1dd7cef83e482370aeda5775396bbf6f678d026c1ddf992f",
+    "text_only": true
+  },
+  {
+    "bytes": 789,
+    "destination": "evidence/release-2026-07-23/claim_3/claim_contract.json",
+    "sha256": "d7bf225a17639f54f814082ae2bc3520c64968328ac01936c53273d75e1479ff",
+    "text_only": true
+  },
+  {
+    "bytes": 99,
+    "destination": "evidence/release-2026-07-23/claim_3/independent_checker_output.json",
+    "sha256": "4564f2ed8a419c6b7bf000259f065f48670cbd93078d1b7661bc4853c4626d41",
+    "text_only": true
+  },
+  {
+    "bytes": 206,
+    "destination": "evidence/release-2026-07-23/claim_3/limitations.md",
+    "sha256": "2e8dfe639443b9b43695f65e0a9180a22ecd3071ebb23b4df988ce72b805c505",
+    "text_only": true
+  },
+  {
+    "bytes": 416,
+    "destination": "evidence/release-2026-07-23/claim_3/method.md",
+    "sha256": "79f4ce46b3124dfe0d96a78ebe07e0f6ef9c44096850a8901223ba7dd096961f",
+    "text_only": true
+  },
+  {
+    "bytes": 206,
+    "destination": "evidence/release-2026-07-23/claim_3/negative_control_output.json",
+    "sha256": "c66a1c8a15b9c36854cedbf2cd1f7db6f2163f190c83d409808b160cf468abd1",
+    "text_only": true
+  },
+  {
+    "bytes": 689,
+    "destination": "evidence/release-2026-07-23/claim_3/raw.csv",
+    "sha256": "15c8662d80f207a70e2d817adcc3a0a3e0be521a211d2850067fdaf5be274fe8",
+    "text_only": true
+  },
+  {
+    "bytes": 924,
+    "destination": "evidence/release-2026-07-23/claim_3/result.json",
+    "sha256": "f7f9d14778f59b8a667b8c29d1f8f83f5961c8a53a7c2d3dcf2e6a2af82c9e6d",
+    "text_only": true
+  },
+  {
+    "bytes": 545,
+    "destination": "evidence/release-2026-07-23/claim_3/source_audit.md",
+    "sha256": "dd95f023b1f1c7271d4e3252361d43ebffbf1d4fc9085b8a7468ebcc7b4ecdd9",
+    "text_only": true
+  },
+  {
+    "bytes": 296,
+    "destination": "evidence/release-2026-07-23/claim_4/EVAL.md",
+    "sha256": "b0b97a7c28ee88f92dd763ca9353375f156744718dc9907ae1083b7abc941521",
+    "text_only": true
+  },
+  {
+    "bytes": 766,
+    "destination": "evidence/release-2026-07-23/claim_4/claim_contract.json",
+    "sha256": "51c381e2744eff22c309a0ceb299ca41be7be37335019d34614bc72e881cbfa8",
+    "text_only": true
+  },
+  {
+    "bytes": 111,
+    "destination": "evidence/release-2026-07-23/claim_4/independent_checker_output.json",
+    "sha256": "49d551c691e75c07f012f13404d430a975efac1b4f38bfc515f8455a7923f73d",
+    "text_only": true
+  },
+  {
+    "bytes": 197,
+    "destination": "evidence/release-2026-07-23/claim_4/limitations.md",
+    "sha256": "d123a83cb2c3508ecae1697706f87e17c413d96d80cf3d96ab05977113fb7474",
+    "text_only": true
+  },
+  {
+    "bytes": 416,
+    "destination": "evidence/release-2026-07-23/claim_4/method.md",
+    "sha256": "237923851192e0e2573ea29ede603c0ce9556bf9b1faf99076f55b895ab033fe",
+    "text_only": true
+  },
+  {
+    "bytes": 181,
+    "destination": "evidence/release-2026-07-23/claim_4/negative_control_output.json",
+    "sha256": "95aa8fe3384f2960f374fc68f2e676fc1a00976a7486ef2efc76f0104504cfba",
+    "text_only": true
+  },
+  {
+    "bytes": 529,
+    "destination": "evidence/release-2026-07-23/claim_4/raw.csv",
+    "sha256": "391d06781d1b7c5e1ff69a21972614a94b7912c643be93b1a66088e7b3af4027",
+    "text_only": true
+  },
+  {
+    "bytes": 1169,
+    "destination": "evidence/release-2026-07-23/claim_4/result.json",
+    "sha256": "1826b107a1ab03640883bdf229c54acb5ddaf2c3b5511f518335b377405ab1ef",
+    "text_only": true
+  },
+  {
+    "bytes": 505,
+    "destination": "evidence/release-2026-07-23/claim_4/source_audit.md",
+    "sha256": "81b070a890cb368196b01afc9ce3bd906d5c4895cd83d089ac05979a733ef440",
+    "text_only": true
+  },
+  {
+    "bytes": 285,
+    "destination": "evidence/release-2026-07-23/claim_5/EVAL.md",
+    "sha256": "b86f14a46acc2b0a74cdd613999c6ec389e42333a5b72a02ebc53ab83cd77d58",
+    "text_only": true
+  },
+  {
+    "bytes": 779,
+    "destination": "evidence/release-2026-07-23/claim_5/claim_contract.json",
+    "sha256": "1a857f9bbf8cc497fee1f53b8e5f9e0119fd092843b95e1750372f58c723978a",
+    "text_only": true
+  },
+  {
+    "bytes": 139,
+    "destination": "evidence/release-2026-07-23/claim_5/independent_checker_output.json",
+    "sha256": "9729e3d9b633afaf7f95deb070f39c0522437439163c16e4e769fe4fe425732c",
+    "text_only": true
+  },
+  {
+    "bytes": 231,
+    "destination": "evidence/release-2026-07-23/claim_5/limitations.md",
+    "sha256": "b87c2c520524c6de03c616c97ecc8151c276d665602da28e29848e6c320eb627",
+    "text_only": true
+  },
+  {
+    "bytes": 416,
+    "destination": "evidence/release-2026-07-23/claim_5/method.md",
+    "sha256": "f5c863403391205ea367ce1a11e3dc1a30d45ff7cff92e8b6c17a94f73c18ed5",
+    "text_only": true
+  },
+  {
+    "bytes": 141,
+    "destination": "evidence/release-2026-07-23/claim_5/negative_control_output.json",
+    "sha256": "17ca54f62f3cefa41c666a173580b9b40be28d76988b729cb45118503d421646",
+    "text_only": true
+  },
+  {
+    "bytes": 705,
+    "destination": "evidence/release-2026-07-23/claim_5/raw.csv",
+    "sha256": "9ae4127fbb69cbf001dfdceb5b8d357a7d51284ae8d2140f1a1964ca98c58b71",
+    "text_only": true
+  },
+  {
+    "bytes": 867,
+    "destination": "evidence/release-2026-07-23/claim_5/result.json",
+    "sha256": "195bd0c05b9c6dede904da6e336cacb5f8824521dc09025f121cf7944064ebfb",
+    "text_only": true
+  },
+  {
+    "bytes": 514,
+    "destination": "evidence/release-2026-07-23/claim_5/source_audit.md",
+    "sha256": "e96f46f9e58f2de09e5ec5320b4328d67e52460b1a2bd4dab0af5d736f336596",
+    "text_only": true
+  },
+  {
+    "bytes": 378,
+    "destination": "evidence/release-2026-07-23/claim_6/EVAL.md",
+    "sha256": "8d052b778d33f0e5b81c6bb98cde3808cbb6b49f1fa8671fc03d3d0af0423692",
+    "text_only": true
+  },
+  {
+    "bytes": 778,
+    "destination": "evidence/release-2026-07-23/claim_6/claim_contract.json",
+    "sha256": "8cd229936ad01f7f30755662d08920fc0fffc24892d965acf706906dae44280b",
+    "text_only": true
+  },
+  {
+    "bytes": 254,
+    "destination": "evidence/release-2026-07-23/claim_6/independent_checker_output.json",
+    "sha256": "5dcaa4843a6b71f5e995423e95e9ff4076e16d64bc1d86f65dc2229a7070a59a",
+    "text_only": true
+  },
+  {
+    "bytes": 534,
+    "destination": "evidence/release-2026-07-23/claim_6/limitations.md",
+    "sha256": "6cc3311198d0e971ea1a2ab10794c83030002f6d6f4d30e55795da02181d338d",
+    "text_only": true
+  },
+  {
+    "bytes": 878,
+    "destination": "evidence/release-2026-07-23/claim_6/method.md",
+    "sha256": "9525e3e941484bf0244a799cc35eb8762a4f6fafae0743c987c998946e872b77",
+    "text_only": true
+  },
+  {
+    "bytes": 333,
+    "destination": "evidence/release-2026-07-23/claim_6/negative_control_output.json",
+    "sha256": "886b0f4c0aaca2612fa5db58ac5defe5bb4d04363cae74d6d83bbbc36abef3c9",
+    "text_only": true
+  },
+  {
+    "bytes": 1549,
+    "destination": "evidence/release-2026-07-23/claim_6/raw.csv",
+    "sha256": "9b2db9e5ecfc88d40888f04b5cee84daf4fdee6528da9d8d3a10b7e9cdb0cc68",
+    "text_only": true
+  },
+  {
+    "bytes": 3396,
+    "destination": "evidence/release-2026-07-23/claim_6/result.json",
+    "sha256": "5dbe930b1202527a193f3b70f691aa2f07b5b15d536871060ca7980ec74212be",
+    "text_only": true
+  },
+  {
+    "bytes": 661,
+    "destination": "evidence/release-2026-07-23/claim_6/source_audit.md",
+    "sha256": "a6efb5223d32e88f3fe90cd6894ec1841762116e0075c24a2a8d91fd4232cda0",
+    "text_only": true
+  },
+  {
+    "bytes": 443,
+    "destination": "evidence/release-2026-07-23/runtime.json",
+    "sha256": "84f8c60235e6accca1dd7121c6a4631195fc0f93242ca5e4cd999678cabdb79a",
+    "text_only": true
+  },
+  {
+    "bytes": 6912,
+    "destination": "evidence/release-2026-07-23/sha256_manifest.json",
+    "sha256": "71dc2456577736aa81114141124faa9ad70f8871f0c07e7c2cb200be98a729b6",
+    "text_only": true
+  },
+  {
+    "bytes": 1369,
+    "destination": "evidence/release-2026-07-23/source_snapshot.json",
+    "sha256": "44d9a8638c546b1bf068d65c6ff289a4ec920d028c624f7a529b3aeb585f4ace",
+    "text_only": true
+  },
+  {
+    "bytes": 154,
+    "destination": "evidence/release-2026-07-23/verdicts.json",
+    "sha256": "06cba1764408f3d8695f3387a82604635960e5f924e2382fe5e5a52469413651",
+    "text_only": true
+  },
+  {
+    "bytes": 1462,
+    "destination": "logbook.json",
+    "sha256": "8adaaee78042155d63cf47f7c3b56e768171856af886dda52fedc657ba9bbedf",
+    "text_only": true
+  },
+  {
+    "bytes": 336,
+    "destination": "pages/index.md",
+    "sha256": "1ca500df7ed525c7427e0745c0e87ddc2aeff9f8a1265a5e2b704d9689a53472",
+    "text_only": true
+  },
+  {
+    "bytes": 1072,
+    "destination": "pages/reproduction-2026-07-23/page.md",
+    "sha256": "e894051d7fe7ebe27fa9a97d59bd43ac00a4f9884cb72d09ded5a7f1de84d666",
+    "text_only": true
+  },
+  {
+    "bytes": 39183,
+    "destination": "reports/release-2026-07-23/images/claim1-polynomial-scaling.svg",
+    "sha256": "928a7c765ab3d9da2e8cbbed274500cff12b1dfa7c3867ed06ba6691c68e79c0",
+    "text_only": true
+  },
+  {
+    "bytes": 45361,
+    "destination": "reports/release-2026-07-23/images/claim4-bound-and-counterexample.svg",
+    "sha256": "07a476640f349c46713e08f1fd77865b064ca11d4907d63ef1b1642c32b57d8a",
+    "text_only": true
+  },
+  {
+    "bytes": 33893,
+    "destination": "reports/release-2026-07-23/images/claim5-literal-particle-bound.svg",
+    "sha256": "a2510b62f87666456823bea39c1795db4c902cd6c9c0079a61d8cb91004c33f9",
+    "text_only": true
+  },
+  {
+    "bytes": 35233,
+    "destination": "reports/release-2026-07-23/images/claims2-3-lower-bound.svg",
+    "sha256": "cb113392465aec6e2ccbef885278aa7ade3f0b8fc7ac0cfe2b4aebb92c490092",
+    "text_only": true
+  },
+  {
+    "bytes": 43033,
+    "destination": "reports/release-2026-07-23/images/headline-claim6.svg",
+    "sha256": "0f3203b2faa735fd08437087cb6ad60d20f3307533b2989465604cd389e8618d",
+    "text_only": true
+  },
+  {
+    "bytes": 6583,
+    "destination": "reports/release-2026-07-23/report.md",
+    "sha256": "6d1069d443a99335bedb0ba1eb23e7e8b8cf12960333322e6e2da6b86a4009b7",
+    "text_only": true
+  }
+]
