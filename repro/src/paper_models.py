@@ -306,3 +306,248 @@ def log_linear_slope(xs: Iterable[float], ys: Iterable[float]) -> float:
     x = np.asarray(tuple(xs), dtype=float)
     y = np.log(np.asarray(tuple(ys), dtype=float))
     return float(np.polyfit(x, y, 1)[0])
+
+
+def product_target_path_law(horizon: int, reward_ratio: float) -> np.ndarray:
+    """Target path law proportional to 2^-T r^(number of one bits)."""
+    paths = np.arange(1 << horizon)
+    ones = np.fromiter(
+        (int(path).bit_count() for path in paths), dtype=np.int16, count=len(paths)
+    )
+    probabilities = reward_ratio**ones.astype(float)
+    return probabilities / probabilities.sum()
+
+
+def _pool_proposal_batch(
+    *,
+    horizon: int,
+    pool_size: int,
+    reward_ratio: float,
+    repetitions: int,
+    xi: float,
+    rng: np.random.Generator,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Generate Algorithm-2 augmented proposals through exact sufficient statistics.
+
+    For the product potential V(s_1:t)=r^(sum s_i), a pool is summarized without
+    approximation by K, the number of one-bits among M fair-reference draws.
+    The returned log weight is exactly Algorithm 2 line 9.
+    """
+    path_ids = np.zeros(repetitions, dtype=np.int32)
+    ones_total = np.zeros(repetitions, dtype=np.int16)
+    log_weights = np.zeros(repetitions, dtype=float)
+    good = np.ones(repetitions, dtype=bool)
+    max_relative_error = np.zeros(repetitions, dtype=float)
+    mean_base_value = (1.0 + reward_ratio) / 2.0
+    log_ratio = log(reward_ratio)
+    for _ in range(horizon):
+        pool_ones = rng.binomial(pool_size, 0.5, size=repetitions)
+        pool_sum = pool_size - pool_ones + pool_ones * reward_ratio
+        empirical_mean = pool_sum / pool_size
+        selected_probability = pool_ones * reward_ratio / pool_sum
+        selected = (rng.random(repetitions) < selected_probability).astype(np.int16)
+        relative_error = np.abs(empirical_mean / mean_base_value - 1.0)
+        good &= relative_error <= xi
+        max_relative_error = np.maximum(max_relative_error, relative_error)
+        log_weights += selected * log_ratio - np.log(empirical_mean)
+        ones_total += selected
+        path_ids = (path_ids << 1) | selected
+    terminal_log_values = ones_total.astype(float) * log_ratio
+    return path_ids, log_weights, terminal_log_values, np.column_stack(
+        [good, max_relative_error]
+    )
+
+
+def run_resampling_pool_mh(
+    *,
+    horizon: int,
+    iterations: int,
+    pool_size: int,
+    reward_ratio: float,
+    repetitions: int,
+    xi: float,
+    seed: int,
+    invert_acceptance: bool = False,
+) -> dict[str, np.ndarray | int]:
+    """Vectorized, literal implementation of Algorithm 2 on a product model."""
+    if horizon < 1 or iterations < 1 or pool_size < 1 or repetitions < 1:
+        raise ValueError("positive horizon, iterations, pool size, and repetitions required")
+    rng = np.random.default_rng(seed)
+    accepted_path, accepted_log_weight, accepted_log_value, diagnostics = (
+        _pool_proposal_batch(
+            horizon=horizon,
+            pool_size=pool_size,
+            reward_ratio=reward_ratio,
+            repetitions=repetitions,
+            xi=xi,
+            rng=rng,
+        )
+    )
+    all_good = diagnostics[:, 0].astype(bool)
+    maximum_relative_error = diagnostics[:, 1].copy()
+    accepted_updates = np.zeros(repetitions, dtype=np.int16)
+    for _ in range(1, iterations):
+        proposed_path, proposed_log_weight, proposed_log_value, diagnostics = (
+            _pool_proposal_batch(
+                horizon=horizon,
+                pool_size=pool_size,
+                reward_ratio=reward_ratio,
+                repetitions=repetitions,
+                xi=xi,
+                rng=rng,
+            )
+        )
+        all_good &= diagnostics[:, 0].astype(bool)
+        maximum_relative_error = np.maximum(
+            maximum_relative_error, diagnostics[:, 1]
+        )
+        # Algorithm 2 line 15:
+        # min(1, w_acc * V(proposal) / (w_proposal * V(accepted))).
+        log_acceptance_ratio = (
+            accepted_log_weight
+            + proposed_log_value
+            - proposed_log_weight
+            - accepted_log_value
+        )
+        if invert_acceptance:
+            log_acceptance_ratio = -log_acceptance_ratio
+        accept = np.log(rng.random(repetitions)) < np.minimum(
+            0.0, log_acceptance_ratio
+        )
+        accepted_path[accept] = proposed_path[accept]
+        accepted_log_weight[accept] = proposed_log_weight[accept]
+        accepted_log_value[accept] = proposed_log_value[accept]
+        accepted_updates += accept
+    return {
+        "path_ids": accepted_path,
+        "all_good": all_good,
+        "maximum_relative_error": maximum_relative_error,
+        "accepted_updates": accepted_updates,
+        "pool_draws": repetitions * iterations * horizon * pool_size,
+    }
+
+
+def exact_pool_good_probability(pool_size: int, reward_ratio: float, xi: float) -> float:
+    """Exact probability that one product-model pool satisfies the good-set test."""
+    pmf = _binomial_half_pmf(pool_size)
+    k = np.arange(pool_size + 1, dtype=float)
+    empirical_mean = (pool_size - k + k * reward_ratio) / pool_size
+    exact_mean = (1.0 + reward_ratio) / 2.0
+    good = np.abs(empirical_mean / exact_mean - 1.0) <= xi
+    return float(pmf[good].sum())
+
+
+def empirical_path_tv(path_ids: np.ndarray, target: np.ndarray) -> float:
+    """TV between an empirical finite path law and an explicit target law."""
+    histogram = np.bincount(path_ids, minlength=len(target)).astype(float)
+    histogram /= histogram.sum()
+    return total_variation(histogram, target)
+
+
+def multinomial_tv_radius(
+    states: int, samples: int, failure_probability: float
+) -> float:
+    """Simultaneous TV radius from the Weissman L1 concentration inequality."""
+    if states < 2 or samples < 1 or not 0 < failure_probability < 1:
+        raise ValueError("invalid concentration parameters")
+    log_prefactor = states * log(2.0)
+    l1_radius = np.sqrt(
+        2.0 * (log_prefactor + log(1.0 / failure_probability)) / samples
+    )
+    return float(min(1.0, 0.5 * l1_radius))
+
+
+def _enumerated_pool_proposal(
+    horizon: int, pool_size: int, reward_ratio: float
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Enumerate the augmented sufficient-statistic proposal for a tiny model."""
+    one_step: list[tuple[int, float, float]] = []
+    for pool_ones in range(pool_size + 1):
+        pool_probability = comb(pool_size, pool_ones) / (2.0**pool_size)
+        pool_sum = pool_size - pool_ones + pool_ones * reward_ratio
+        empirical_mean = pool_sum / pool_size
+        selected_one_probability = pool_ones * reward_ratio / pool_sum
+        for selected, selected_probability in (
+            (0, 1.0 - selected_one_probability),
+            (1, selected_one_probability),
+        ):
+            probability = pool_probability * selected_probability
+            if probability == 0:
+                continue
+            log_weight_increment = selected * log(reward_ratio) - log(empirical_mean)
+            one_step.append((selected, log_weight_increment, probability))
+
+    states: dict[tuple[int, float], float] = {(0, 0.0): 1.0}
+    for _ in range(horizon):
+        next_states: dict[tuple[int, float], float] = {}
+        for (path_id, log_weight), state_probability in states.items():
+            for selected, increment, option_probability in one_step:
+                key = ((path_id << 1) | selected, round(log_weight + increment, 13))
+                next_states[key] = (
+                    next_states.get(key, 0.0)
+                    + state_probability * option_probability
+                )
+        states = next_states
+    paths = np.fromiter((key[0] for key in states), dtype=np.int32)
+    log_weights = np.fromiter((key[1] for key in states), dtype=float)
+    probabilities = np.fromiter(states.values(), dtype=float)
+    probabilities /= probabilities.sum()
+    return paths, log_weights, probabilities
+
+
+def exact_augmented_mh_audit(
+    *,
+    horizon: int,
+    iterations: int,
+    pool_size: int,
+    reward_ratio: float,
+    invert_acceptance: bool = False,
+) -> dict[str, float | int]:
+    """Independent exhaustive checker of Algorithm 2's augmented-space MH ratio."""
+    paths, log_weights, proposal = _enumerated_pool_proposal(
+        horizon, pool_size, reward_ratio
+    )
+    terminal_log_values = np.array(
+        [int(path).bit_count() * log(reward_ratio) for path in paths]
+    )
+    log_density_ratio = terminal_log_values - log_weights
+    if invert_acceptance:
+        log_density_ratio = -log_density_ratio
+    density_ratio = np.exp(log_density_ratio)
+    augmented_target = proposal * density_ratio
+    augmented_target /= augmented_target.sum()
+
+    acceptance = np.minimum(
+        1.0, density_ratio[None, :] / density_ratio[:, None]
+    )
+    transition = proposal[None, :] * acceptance
+    transition[np.diag_indices_from(transition)] += 1.0 - transition.sum(axis=1)
+    detailed_balance_error = float(
+        np.max(
+            np.abs(
+                augmented_target[:, None] * transition
+                - augmented_target[None, :] * transition.T
+            )
+        )
+    )
+    stationarity_error = float(
+        np.max(np.abs(augmented_target @ transition - augmented_target))
+    )
+
+    law = proposal.copy()
+    for _ in range(1, iterations):
+        law = law @ transition
+    target_path = product_target_path_law(horizon, reward_ratio)
+    output_path = np.bincount(
+        paths, weights=law, minlength=len(target_path)
+    ).astype(float)
+    invariant_path = np.bincount(
+        paths, weights=augmented_target, minlength=len(target_path)
+    ).astype(float)
+    return {
+        "augmented_states": len(paths),
+        "detailed_balance_max_error": detailed_balance_error,
+        "stationarity_max_error": stationarity_error,
+        "invariant_path_tv": total_variation(invariant_path, target_path),
+        "finite_iteration_path_tv": total_variation(output_path, target_path),
+    }
