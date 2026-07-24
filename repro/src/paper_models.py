@@ -141,6 +141,43 @@ def exact_product_smc_tv(
     return audit.target_bit_probability, q, tv
 
 
+def minimum_particles_for_product_tv(
+    horizon: int,
+    reward_ratio: float,
+    delta_tv: float,
+    *,
+    maximum_particles: int = 2_000_000,
+) -> tuple[int, float]:
+    """Find the minimum N meeting a TV target without using Theorem 5.1.
+
+    The search calls the independently derived finite-N output law.  It first
+    doubles an upper bracket and then performs an integer binary search.
+    """
+    if not 0 < delta_tv < 1:
+        raise ValueError("delta_tv must be in (0,1)")
+
+    def tv_at(n_particles: int) -> float:
+        return exact_product_smc_tv(
+            horizon, n_particles, reward_ratio
+        )[2]
+
+    if tv_at(1) <= delta_tv:
+        return 1, tv_at(1)
+    high = 2
+    while high <= maximum_particles and tv_at(high) > delta_tv:
+        high *= 2
+    if high > maximum_particles:
+        raise ValueError("minimum particle count exceeds search limit")
+    low = high // 2 + 1
+    while low < high:
+        midpoint = (low + high) // 2
+        if tv_at(midpoint) <= delta_tv:
+            high = midpoint
+        else:
+            low = midpoint + 1
+    return low, tv_at(low)
+
+
 @dataclass(frozen=True)
 class PrefixTree:
     horizon: int
@@ -318,6 +355,25 @@ def product_target_path_law(horizon: int, reward_ratio: float) -> np.ndarray:
     return probabilities / probabilities.sum()
 
 
+def product_target_weight_law(horizon: int, reward_ratio: float) -> np.ndarray:
+    """Target distribution of Hamming weight for the product path law."""
+    p = reward_ratio / (1.0 + reward_ratio)
+    return np.asarray(
+        [
+            comb(horizon, k) * p**k * (1.0 - p) ** (horizon - k)
+            for k in range(horizon + 1)
+        ],
+        dtype=float,
+    )
+
+
+def empirical_weight_tv(weights: np.ndarray, target: np.ndarray) -> float:
+    """TV on exchangeable path laws, reduced exactly to Hamming weights."""
+    histogram = np.bincount(weights, minlength=len(target)).astype(float)
+    histogram /= histogram.sum()
+    return total_variation(histogram, target)
+
+
 def _pool_proposal_batch(
     *,
     horizon: int,
@@ -420,6 +476,9 @@ def run_resampling_pool_mh(
         accepted_updates += accept
     return {
         "path_ids": accepted_path,
+        "accepted_ones": np.rint(
+            accepted_log_value / log(reward_ratio)
+        ).astype(np.int16),
         "all_good": all_good,
         "maximum_relative_error": maximum_relative_error,
         "accepted_updates": accepted_updates,
