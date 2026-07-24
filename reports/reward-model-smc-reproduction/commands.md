@@ -45,3 +45,24 @@ The fixed verifier itself performed the SVG parse checks, `marimo check`,
 claim verifiers, independent checkers, negative controls, JSON generation,
 secret scan, immutable-Space subset audit, and evaluator-visibility audit.
 
+## Publication and remote verification
+
+```bash
+hf auth whoami
+hf spaces info DineshAI/MrIDZjIsNF --revision main --format json
+hf download DineshAI/MrIDZjIsNF --repo-type space --revision 16f282752393f0d0b9a05950ff2a4ce57d7bbf8f --local-dir <preflight-directory>
+/opt/homebrew/Cellar/hf/1.24.0/libexec/bin/python <text-only-create-commit-script>
+hf spaces info DineshAI/MrIDZjIsNF --revision main --format json
+hf download DineshAI/MrIDZjIsNF --repo-type space --revision e646b236a4ba1e68b5bc246fb48a2d9f6113e4dd --local-dir <verification-directory>
+git fetch origin master
+git push origin HEAD:master
+git ls-remote origin refs/heads/master
+hf download ICML-2026-agent-repro/verdicts --repo-type dataset --include verdicts.json --local-dir <verdict-directory>
+```
+
+The publication script decoded every payload as UTF-8, rechecked every
+allowlist hash, created 91 `CommitOperationAdd` operations and zero delete
+operations, and pinned `parent_commit` to
+`16f282752393f0d0b9a05950ff2a4ce57d7bbf8f`. It did not read or print a token.
+The verdict dataset was filtered only by
+`space_id == "DineshAI/MrIDZjIsNF"`.
