@@ -65,7 +65,8 @@ delete operation:
   byte-identical; only `logbook.json` and `pages/index.md` changed for
   navigation
 - Final Space tree: 171 files
-- GitHub `master`: `18eecce5f952dab02936c18d1241b197b5c8a359`,
-  independently confirmed with `git ls-remote`
+- GitHub exact-text mirror commit:
+  `18eecce5f952dab02936c18d1241b197b5c8a359`; `master` was fast-forwarded
+  non-force and verified with `git ls-remote`
 - Publication status: `awaiting_judge`
 - Live judged score: still `0/12`; no score increase claimed
