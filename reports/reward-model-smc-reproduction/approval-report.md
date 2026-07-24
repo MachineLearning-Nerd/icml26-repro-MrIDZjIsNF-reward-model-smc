@@ -2,7 +2,7 @@
 - Conservative projected score range after the proposed change: `8/12–12/12`
 - Best-supported possible new score: `12/12` — forecast only, not a judge result
 
-# Publication approval report
+# Publication release report
 
 Current total score remains **0/12**. The proposed Space candidate has six
 direct evidence verdicts and no BLOCKED claim. Only a future live judge verdict
@@ -51,13 +51,21 @@ judge, raw/checker/control links, and a complete executable-source page.
 - All 15 logbook nodes and 58 rendered relative links resolve.
 - No claim is BLOCKED.
 
-## Exact publication action requested
+## Published outcome
 
-Approval is requested to upload only the 91 SHA-256-pinned paths in
-`hf_upload_allowlist.json` to the existing Space
-`DineshAI/MrIDZjIsNF` using the text-only Hugging Face API. No second Space will
-be created. After upload, the exact revision will be verified, the paper will
-be marked awaiting judge, and the exact published text paths will be mirrored
-to GitHub `master`. No score increase will be claimed before a live judge
-verdict.
+The user approved the exact action above, and publication completed without a
+delete operation:
 
+- Existing Space: `DineshAI/MrIDZjIsNF`
+- Previous judged revision: `16f282752393f0d0b9a05950ff2a4ce57d7bbf8f`
+- Published revision: `e646b236a4ba1e68b5bc246fb48a2d9f6113e4dd`
+- Upload: 91 SHA-256-pinned UTF-8 text paths; zero deletes
+- Remote verification: all 91 hashes match the approved allowlist
+- Preservation: all 82 old paths remain; all 58 prior evidence files are
+  byte-identical; only `logbook.json` and `pages/index.md` changed for
+  navigation
+- Final Space tree: 171 files
+- GitHub `master`: `18eecce5f952dab02936c18d1241b197b5c8a359`,
+  independently confirmed with `git ls-remote`
+- Publication status: `awaiting_judge`
+- Live judged score: still `0/12`; no score increase claimed
