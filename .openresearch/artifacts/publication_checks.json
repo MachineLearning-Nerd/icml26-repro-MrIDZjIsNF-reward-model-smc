@@ -1,4 +1,92 @@
 {
+  "evaluator_visibility": {
+    "canonical_entrypoint": "pages/current-verification-v2/page.md",
+    "claims": [
+      {
+        "canonical_page": "pages/claim-1-v2/page.md",
+        "checker_link": true,
+        "claim": 1,
+        "code_visible": true,
+        "complete_source_link_visible": true,
+        "control_link": true,
+        "criticism_answer_visible": true,
+        "criticism_specifics_visible": true,
+        "data_inline": true,
+        "raw_link": true,
+        "source_visible": true
+      },
+      {
+        "canonical_page": "pages/claim-2-v2/page.md",
+        "checker_link": true,
+        "claim": 2,
+        "code_visible": true,
+        "complete_source_link_visible": true,
+        "control_link": true,
+        "criticism_answer_visible": true,
+        "criticism_specifics_visible": true,
+        "data_inline": true,
+        "raw_link": true,
+        "source_visible": true
+      },
+      {
+        "canonical_page": "pages/claim-3-v2/page.md",
+        "checker_link": true,
+        "claim": 3,
+        "code_visible": true,
+        "complete_source_link_visible": true,
+        "control_link": true,
+        "criticism_answer_visible": true,
+        "criticism_specifics_visible": true,
+        "data_inline": true,
+        "raw_link": true,
+        "source_visible": true
+      },
+      {
+        "canonical_page": "pages/claim-4-v2/page.md",
+        "checker_link": true,
+        "claim": 4,
+        "code_visible": true,
+        "complete_source_link_visible": true,
+        "control_link": true,
+        "criticism_answer_visible": true,
+        "criticism_specifics_visible": true,
+        "data_inline": true,
+        "raw_link": true,
+        "source_visible": true
+      },
+      {
+        "canonical_page": "pages/claim-5-v2/page.md",
+        "checker_link": true,
+        "claim": 5,
+        "code_visible": true,
+        "complete_source_link_visible": true,
+        "control_link": true,
+        "criticism_answer_visible": true,
+        "criticism_specifics_visible": true,
+        "data_inline": true,
+        "raw_link": true,
+        "source_visible": true
+      },
+      {
+        "canonical_page": "pages/claim-6-v2/page.md",
+        "checker_link": true,
+        "claim": 6,
+        "code_visible": true,
+        "complete_source_link_visible": true,
+        "control_link": true,
+        "criticism_answer_visible": true,
+        "criticism_specifics_visible": true,
+        "data_inline": true,
+        "raw_link": true,
+        "source_visible": true
+      }
+    ],
+    "complete_source_includes_helpers": true,
+    "complete_source_page": "pages/executable-source-v2/page.md",
+    "complete_source_page_exists": true,
+    "evaluator_blind_visibility_passed": true,
+    "historical_verifier_clearly_superseded": true
+  },
   "figures": [
     "reports/reward-model-smc-reproduction/images/headline-claim6.svg",
     "reports/reward-model-smc-reproduction/images/claim1-polynomial-scaling.svg",
@@ -7,19 +95,19 @@
     "reports/reward-model-smc-reproduction/images/claim5-literal-particle-bound.svg"
   ],
   "hf_subset": {
-    "candidate_file_count": 82,
-    "judged_revision": "b675cbafc35867fc9212939818e54ff9225ac567",
-    "old_file_count": 17,
-    "old_manifest_sha256": "5693e6c47f55ed9ba9dc17053adc3fbe05e29580cd5151dee36523aa1846ee5d",
+    "candidate_file_count": 171,
+    "judged_revision": "16f282752393f0d0b9a05950ff2a4ce57d7bbf8f",
+    "old_file_count": 82,
+    "old_manifest_sha256": "f3ec5a730bac41f2177077fcbdf96a43c005426cd6aefe1d956412693badd5d1",
     "old_paths_subset_of_candidate": true,
     "protected_evidence_pages_overwritten": [],
     "text_only_uploads": true,
-    "upload_count": 67
+    "upload_count": 91
   },
   "notebook": "notebooks/reward_model_smc.py",
   "report": "reports/reward-model-smc-reproduction/report.md",
   "secret_scan": {
-    "files_scanned": 134,
+    "files_scanned": 169,
     "passed": true,
     "potential_secret_matches": 0
   },
@@ -30,19 +118,19 @@
     "marimo_stderr": "",
     "svg_checks": [
       {
-        "bytes": 43033,
+        "bytes": 42495,
         "path": "reports/reward-model-smc-reproduction/images/headline-claim6.svg",
         "valid": true,
-        "view_box": "0 0 519.465703 321.517859"
+        "view_box": "0 0 524.012095 321.517859"
       },
       {
-        "bytes": 39183,
+        "bytes": 37361,
         "path": "reports/reward-model-smc-reproduction/images/claim1-polynomial-scaling.svg",
         "valid": true,
-        "view_box": "0 0 515.404961 323.437781"
+        "view_box": "0 0 530.604961 323.437781"
       },
       {
-        "bytes": 35233,
+        "bytes": 38406,
         "path": "reports/reward-model-smc-reproduction/images/claims2-3-lower-bound.svg",
         "valid": true,
         "view_box": "0 0 515.410625 321.517859"

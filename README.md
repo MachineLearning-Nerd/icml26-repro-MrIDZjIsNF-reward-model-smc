@@ -8,17 +8,16 @@ Sequential Monte Carlo and Beyond*](https://arxiv.org/abs/2602.01381).
 The previous live judge score is still **0/12**; the results below are
 reproduction verdicts and a forecast, not points awarded by the judge.
 The approved evidence release is published in the
-[existing Hugging Face Space at revision `16f28275`](https://huggingface.co/spaces/DineshAI/MrIDZjIsNF/tree/16f282752393f0d0b9a05950ff2a4ce57d7bbf8f)
+[existing Hugging Face Space at revision `e646b236`](https://huggingface.co/spaces/DineshAI/MrIDZjIsNF/tree/e646b236a4ba1e68b5bc246fb48a2d9f6113e4dd)
 and is awaiting a new live judge evaluation.
 
 The strongest test implements the paper's actual resampling-pool
 Metropolis–Hastings Algorithm 2. The paper target is conditional
-`δTV ≤ 0.10`; across horizons `T=3,4,5,6,8`, the observed 99.9% simultaneous
-TV upper bounds are `0.0082, 0.0092, 0.0121, 0.0185, 0.0367`. The exact
-good-event probabilities are at least `0.999999999999965`, and a separate
-110-state augmented-space enumeration checks detailed balance to
-`2.17e-19`. Inverting the MH ratio raises TV to `0.16265`, so the negative
-control fails as intended.
+`δTV ≤ 0.10`; across horizons `T=3,4,6,8,12,16,24`, every 99.9%
+simultaneous TV upper bound is at most `0.0142`. The exact good-event
+probabilities are all above `0.988`, and a separate augmented-space
+enumeration checks detailed balance and stationarity to machine precision.
+Inverting the MH ratio is the negative control and fails the target.
 
 The other checks execute the Appendix-C oracle lower-bound construction,
 evaluate the literal Theorem 5.1 particle threshold, and exhaust terminal
@@ -55,6 +54,8 @@ across the tree.
 | [`orx/statistical-scaling-stress-test`](https://github.com/MachineLearning-Nerd/icml26-repro-MrIDZjIsNF-reward-model-smc/tree/orx/statistical-scaling-stress-test) | Independent Monte Carlo, Wilson intervals, bootstraps | `uv sync --frozen && .venv/bin/python repro/src/verify_smc.py` | Independently corroborated claims 1–5; claim 6 blocked | Local CPU, 10 s |
 | [`orx/cumulative-evidence-and-resampling-pool-mh`](https://github.com/MachineLearning-Nerd/icml26-repro-MrIDZjIsNF-reward-model-smc/tree/orx/cumulative-evidence-and-resampling-pool-mh) | Implement Algorithm 2 and augmented-state checker | `uv sync --frozen && .venv/bin/python repro/src/verify_smc.py` | Cumulative claims 1–6 pass their direct contracts | Local CPU, 30 s |
 | [`orx/release-candidate-cumulative-evidence`](https://github.com/MachineLearning-Nerd/icml26-repro-MrIDZjIsNF-reward-model-smc/tree/orx/release-candidate-cumulative-evidence) | Log every raw metric; generate and validate release package | `uv sync --frozen && .venv/bin/python repro/src/verify_smc.py` | 5 VERIFIED, 1 FALSIFIED; report/SVG/notebook/manifests valid | Local CPU, 50 s |
+| [`orx/independent-complexity-and-judge-visible-v2`](https://github.com/MachineLearning-Nerd/icml26-repro-MrIDZjIsNF-reward-model-smc/tree/orx/independent-complexity-and-judge-visible-v2) | Add measured complexity thresholds, independent checkers, and evaluator-visible source | `uv sync --frozen && .venv/bin/python repro/src/verify_smc.py` | 5 VERIFIED, 1 FALSIFIED; all six prior judge criticisms directly answered | Local CPU, 44 s |
+| [`orx/evaluator-blind-criticism-audit`](https://github.com/MachineLearning-Nerd/icml26-repro-MrIDZjIsNF-reward-model-smc/tree/orx/evaluator-blind-criticism-audit) | Audit the candidate using only published evaluator-visible files | `uv sync --frozen && .venv/bin/python repro/src/verify_smc.py` | Blind visibility, source completeness, negative controls, and additive release gates pass | Local CPU, 44 s |
 
 ## Reproduce
 

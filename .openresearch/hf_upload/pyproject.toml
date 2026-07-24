@@ -1,0 +1,13 @@
+[project]
+name = "reward-model-smc-reproduction"
+version = "0.1.0"
+description = "CPU reproduction of theoretical reward-model SMC claims from arXiv:2602.01381"
+requires-python = "==3.12.*"
+dependencies = [
+    "marimo>=0.16,<1",
+    "matplotlib>=3.10,<4",
+    "numpy>=2.3,<3",
+]
+
+[tool.uv]
+package = false

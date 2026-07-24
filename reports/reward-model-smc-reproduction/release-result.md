@@ -4,15 +4,16 @@ The approved claim-faithful evidence package was published additively to the
 existing Hugging Face Space `DineshAI/MrIDZjIsNF`.
 
 - Previous judged revision:
-  `b675cbafc35867fc9212939818e54ff9225ac567`.
-- Published revision:
   `16f282752393f0d0b9a05950ff2a4ce57d7bbf8f`.
+- Published revision:
+  `e646b236a4ba1e68b5bc246fb48a2d9f6113e4dd`.
 - Published commit:
-  <https://huggingface.co/spaces/DineshAI/MrIDZjIsNF/commit/16f282752393f0d0b9a05950ff2a4ce57d7bbf8f>.
-- Upload scope: exactly 67 allowlisted UTF-8 text files in one atomic commit.
-- Remote verification: all 67 published hashes match the approved allowlist.
-- Preservation check: all 17 judged paths remain present in the 82-file
-  published tree; no protected pre-existing content changed unexpectedly.
+  <https://huggingface.co/spaces/DineshAI/MrIDZjIsNF/commit/e646b236a4ba1e68b5bc246fb48a2d9f6113e4dd>.
+- Upload scope: exactly 91 allowlisted UTF-8 text files in one atomic commit.
+- Remote verification: all 91 published hashes match the approved allowlist.
+- Preservation check: all 82 judged paths remain present in the 171-file
+  published tree. All 58 protected prior evidence files are byte-identical;
+  only `logbook.json` and `pages/index.md` changed to expose the new pages.
 - Compute: local CPU only, no Hugging Face cpu-upgrade, no GPU, and no compute
   charge.
 - Status: awaiting a new live judge evaluation.
@@ -23,4 +24,4 @@ must not be presented as judge-awarded points.
 
 The exact upload allowlist is
 `.openresearch/artifacts/hf_upload_allowlist.json`, whose SHA-256 is
-`403edd97b8b15cbfd489cbdf6d45bb9cd698249f1c041de4734e6c227a1a0298`.
+`9477533ceb9e7b81201fca52ed9f382447039bca813d083d4037ac4dcfa5f5c9`.

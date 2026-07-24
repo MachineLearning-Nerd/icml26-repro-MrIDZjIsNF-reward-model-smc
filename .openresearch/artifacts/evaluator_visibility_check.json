@@ -1,0 +1,88 @@
+{
+  "canonical_entrypoint": "pages/current-verification-v2/page.md",
+  "claims": [
+    {
+      "canonical_page": "pages/claim-1-v2/page.md",
+      "checker_link": true,
+      "claim": 1,
+      "code_visible": true,
+      "complete_source_link_visible": true,
+      "control_link": true,
+      "criticism_answer_visible": true,
+      "criticism_specifics_visible": true,
+      "data_inline": true,
+      "raw_link": true,
+      "source_visible": true
+    },
+    {
+      "canonical_page": "pages/claim-2-v2/page.md",
+      "checker_link": true,
+      "claim": 2,
+      "code_visible": true,
+      "complete_source_link_visible": true,
+      "control_link": true,
+      "criticism_answer_visible": true,
+      "criticism_specifics_visible": true,
+      "data_inline": true,
+      "raw_link": true,
+      "source_visible": true
+    },
+    {
+      "canonical_page": "pages/claim-3-v2/page.md",
+      "checker_link": true,
+      "claim": 3,
+      "code_visible": true,
+      "complete_source_link_visible": true,
+      "control_link": true,
+      "criticism_answer_visible": true,
+      "criticism_specifics_visible": true,
+      "data_inline": true,
+      "raw_link": true,
+      "source_visible": true
+    },
+    {
+      "canonical_page": "pages/claim-4-v2/page.md",
+      "checker_link": true,
+      "claim": 4,
+      "code_visible": true,
+      "complete_source_link_visible": true,
+      "control_link": true,
+      "criticism_answer_visible": true,
+      "criticism_specifics_visible": true,
+      "data_inline": true,
+      "raw_link": true,
+      "source_visible": true
+    },
+    {
+      "canonical_page": "pages/claim-5-v2/page.md",
+      "checker_link": true,
+      "claim": 5,
+      "code_visible": true,
+      "complete_source_link_visible": true,
+      "control_link": true,
+      "criticism_answer_visible": true,
+      "criticism_specifics_visible": true,
+      "data_inline": true,
+      "raw_link": true,
+      "source_visible": true
+    },
+    {
+      "canonical_page": "pages/claim-6-v2/page.md",
+      "checker_link": true,
+      "claim": 6,
+      "code_visible": true,
+      "complete_source_link_visible": true,
+      "control_link": true,
+      "criticism_answer_visible": true,
+      "criticism_specifics_visible": true,
+      "data_inline": true,
+      "raw_link": true,
+      "source_visible": true
+    }
+  ],
+  "complete_source_includes_helpers": true,
+  "complete_source_page": "pages/executable-source-v2/page.md",
+  "complete_source_page_exists": true,
+  "evaluator_blind_visibility_passed": true,
+  "historical_verifier_clearly_superseded": true
+}

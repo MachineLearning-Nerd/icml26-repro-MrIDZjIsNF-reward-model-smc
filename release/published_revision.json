@@ -1,0 +1,14 @@
+{
+  "paper": "MrIDZjIsNF",
+  "space_id": "DineshAI/MrIDZjIsNF",
+  "previous_judged_revision": "16f282752393f0d0b9a05950ff2a4ce57d7bbf8f",
+  "published_revision": "e646b236a4ba1e68b5bc246fb48a2d9f6113e4dd",
+  "publication_status": "awaiting_judge",
+  "published_at": "2026-07-24T02:09:42Z",
+  "live_judged_score_at_publication": "0/12",
+  "score_increase_claimed": false,
+  "upload_entries": 91,
+  "allowlist_sha256": "9477533ceb9e7b81201fca52ed9f382447039bca813d083d4037ac4dcfa5f5c9",
+  "manifest_sha256": "8c57002b3a7c810bcee805e3da34eb20c125b3cdc1ead2b0a94d078977432207",
+  "git_source_sha": "79db365e8825b4b8b8a2c322009d952b92c6ce0f"
+}

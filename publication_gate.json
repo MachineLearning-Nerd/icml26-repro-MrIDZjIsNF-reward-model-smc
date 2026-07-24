@@ -2,7 +2,12 @@
   "paper": "MrIDZjIsNF",
   "tests_passed": true,
   "publication_gate_passed": true,
-  "claims_verified": 6,
+  "claims_verified": 5,
+  "claims_falsified": 1,
   "claims_total": 6,
-  "arxiv": "2602.01381"
+  "arxiv": "2602.01381",
+  "publication_status": "awaiting_judge",
+  "hf_revision": "e646b236a4ba1e68b5bc246fb48a2d9f6113e4dd",
+  "live_judged_score": "0/12",
+  "score_increase_claimed": false
 }

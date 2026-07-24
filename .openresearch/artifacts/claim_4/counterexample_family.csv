@@ -1,0 +1,5 @@
+T,reward_ratio,minimal_bellman_epsilon,threshold_1_over_2T,epsilon_at_or_above_threshold,exact_SP_gSMC_TV,contradicts_universal_failure_sentence
+10,1.1,0.050000000000000044,0.05,True,0.0,True
+10,1.2,0.10000000000000009,0.05,True,0.0,True
+20,1.1,0.050000000000000044,0.025,True,0.0,True
+20,1.2,0.10000000000000009,0.025,True,0.0,True
